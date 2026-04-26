@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PinFlow</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🚀 PinFlow</h1>
+    <p>Create Pinterest-ready affiliate posts instantly</p>
+
+    <form method="POST">
+        <input name="link" placeholder="Paste Affiliate Link" required>
+        <input name="image" placeholder="Paste Image URL" required>
+        <button type="submit">Generate</button>
+    </form>
+
+    {% if data %}
+    <div class="preview">
+        <img src="{{ data.image }}">
+
+        <h2 id="title">{{ data.title }}</h2>
+        <p id="desc">{{ data.desc }}</p>
+        <p id="tags">{{ data.tags }}</p>
+
+        <a href="{{ data.link }}" target="_blank">🔗 Visit Product</a>
+
+        <div class="buttons">
+            <button onclick="copyText('title')">Copy Title</button>
+            <button onclick="copyText('desc')">Copy Desc</button>
+            <button onclick="copyText('tags')">Copy Tags</button>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function copyText(id) {
+    let text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text);
+    alert("Copied!");
+}
+</script>
+
+</body>
+</html>
