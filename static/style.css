@@ -1,45 +1,25 @@
 body {
-    font-family: 'Segoe UI';
-    background: #0f172a;
-    color: white;
+    background: #f1f5f9;
+    font-family: sans-serif;
     text-align: center;
 }
 
-.container {
-    margin-top: 50px;
+.images {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
 }
 
-input {
-    padding: 12px;
-    margin: 10px;
-    width: 320px;
+.img {
+    width: 150px;
     border-radius: 10px;
-    border: none;
-}
-
-button {
-    padding: 10px 20px;
-    background: #00ff88;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    margin: 5px;
 }
 
 .preview {
-    background: #1e293b;
-    margin-top: 30px;
+    background: white;
     padding: 20px;
-    border-radius: 15px;
+    margin-top: 20px;
     display: inline-block;
-    width: 350px;
-}
-
-.preview img {
-    width: 100%;
     border-radius: 10px;
-}
-
-.buttons {
-    margin-top: 10px;
 }

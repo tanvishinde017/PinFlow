@@ -9,44 +9,54 @@ app = Flask(__name__)
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+
 def generate_ai_content(link):
     try:
-        prompt = f"""
-        Generate Pinterest content for this product: {link}
-
-        Give:
-        1. Catchy Title
-        2. Engaging Description
-        3. 5 Trending Hashtags
-        """
-
         response = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}]
+            messages=[{
+                "role": "user",
+                "content": f"Generate Pinterest title, description and hashtags for {link}"
+            }]
         )
-
         return response.choices[0].message.content
-
     except Exception as e:
-        return f"Error generating content: {str(e)}"
+        return str(e)
+
+
+# FAKE IMAGE FETCH (for now)
+def get_images():
+    return [
+        "https://via.placeholder.com/300",
+        "https://via.placeholder.com/301",
+        "https://via.placeholder.com/302"
+    ]
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    images = []
     data = None
 
     if request.method == "POST":
-        link = request.form["link"]
-        image = request.form["image"]
+        link = request.form.get("link")
+        action = request.form.get("action")
 
-        ai_content = generate_ai_content(link)
+        if action == "fetch":
+            images = get_images()
 
-        data = {
-            "link": link,
-            "image": image,
-            "content": ai_content
-        }
+        if action == "generate":
+            selected_image = request.form.get("selected_image")
+            content = generate_ai_content(link)
 
-    return render_template("index.html", data=data)
+            data = {
+                "image": selected_image,
+                "content": content,
+                "link": link
+            }
+
+    return render_template("index.html", images=images, data=data)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

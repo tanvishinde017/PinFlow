@@ -1,9 +1,41 @@
-{% if data %}
-<div class="preview">
-    <img src="{{ data.image }}">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PinFlow</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
 
-    <pre>{{ data.content }}</pre>
+<div class="container">
+    <h1>📌 PinFlow</h1>
 
-    <a href="{{ data.link }}" target="_blank">🔗 Visit Product</a>
+    <!-- LINK INPUT -->
+    <form method="POST">
+        <input name="link" placeholder="Paste Amazon Link" required>
+        <button name="action" value="fetch">Fetch Images</button>
+    </form>
+
+    <!-- IMAGE SELECT -->
+    <div class="images">
+        {% for img in images %}
+            <form method="POST">
+                <input type="hidden" name="link" value="{{ request.form.link }}">
+                <input type="hidden" name="selected_image" value="{{ img }}">
+                <img src="{{ img }}" class="img">
+                <button name="action" value="generate">Use this</button>
+            </form>
+        {% endfor %}
+    </div>
+
+    <!-- RESULT -->
+    {% if data %}
+    <div class="preview">
+        <img src="{{ data.image }}">
+        <pre>{{ data.content }}</pre>
+    </div>
+    {% endif %}
+
 </div>
-{% endif %}
+
+</body>
+</html>
