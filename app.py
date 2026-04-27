@@ -1,25 +1,32 @@
 from flask import Flask, render_template, request
-import random
+import os
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
-def generate_content(link):
-    titles = [
-        "🔥 Trending Product You Must Try!",
-        "💡 Smart Buy You’ll Love",
-        "🛒 Best Deal on Amazon Right Now",
-        "✨ Upgrade Your Lifestyle Today"
-    ]
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-    descriptions = [
-        "This product is gaining massive popularity. Perfect for daily use and highly rated!",
-        "One of the best finds online right now. Worth every penny.",
-        "People are loving this product for its quality and performance.",
-    ]
+def generate_ai_content(link):
+    prompt = f"""
+    Generate Pinterest content for this product: {link}
 
-    hashtags = "#amazonfinds #trending #musthave #deals #shopping"
+    Give:
+    1. Catchy Title
+    2. Engaging Description
+    3. 5 Trending Hashtags
+    """
 
-    return random.choice(titles), random.choice(descriptions), hashtags
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    content = response.choices[0].message.content
+
+    return content
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -29,14 +36,12 @@ def index():
         link = request.form["link"]
         image = request.form["image"]
 
-        title, desc, tags = generate_content(link)
+        ai_content = generate_ai_content(link)
 
         data = {
             "link": link,
             "image": image,
-            "title": title,
-            "desc": desc,
-            "tags": tags
+            "content": ai_content
         }
 
     return render_template("index.html", data=data)
