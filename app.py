@@ -10,23 +10,25 @@ app = Flask(__name__)
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def generate_ai_content(link):
-    prompt = f"""
-    Generate Pinterest content for this product: {link}
+    try:
+        prompt = f"""
+        Generate Pinterest content for this product: {link}
 
-    Give:
-    1. Catchy Title
-    2. Engaging Description
-    3. 5 Trending Hashtags
-    """
+        Give:
+        1. Catchy Title
+        2. Engaging Description
+        3. 5 Trending Hashtags
+        """
 
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}]
-    )
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}]
+        )
 
-    content = response.choices[0].message.content
+        return response.choices[0].message.content
 
-    return content
+    except Exception as e:
+        return f"Error generating content: {str(e)}"
 
 @app.route("/", methods=["GET", "POST"])
 def index():
