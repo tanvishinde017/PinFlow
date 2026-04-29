@@ -9,29 +9,36 @@
 <div class="container">
     <h1>📌 PinFlow</h1>
 
-    <!-- LINK INPUT -->
+    <!-- INPUT -->
     <form method="POST">
-        <input name="link" placeholder="Paste Amazon Link" required>
+        <input name="link" placeholder="Paste Product Link" required>
         <button name="action" value="fetch">Fetch Images</button>
     </form>
 
-    <!-- IMAGE SELECT -->
+    <!-- IMAGES -->
     <div class="images">
         {% for img in images %}
-            <form method="POST">
-                <input type="hidden" name="link" value="{{ request.form.link }}">
-                <input type="hidden" name="selected_image" value="{{ img }}">
-                <img src="{{ img }}" class="img">
-                <button name="action" value="generate">Use this</button>
-            </form>
+        <form method="POST">
+            <input type="hidden" name="link" value="{{ request.form.get('link') }}">
+            <input type="hidden" name="selected_image" value="{{ img }}">
+            <img src="{{ img }}" class="img">
+            <button name="action" value="generate">Use</button>
+        </form>
         {% endfor %}
     </div>
 
     <!-- RESULT -->
     {% if data %}
-    <div class="preview">
+    <div class="card">
         <img src="{{ data.image }}">
-        <pre>{{ data.content }}</pre>
+
+        <div class="content">
+            <h2>{{ data.title }}</h2>
+            <p>{{ data.description }}</p>
+            <p class="tags">{{ data.tags }}</p>
+
+            <a href="{{ data.link }}" target="_blank">🔗 View Product</a>
+        </div>
     </div>
     {% endif %}
 

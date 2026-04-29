@@ -4,6 +4,32 @@ body {
     text-align: center;
 }
 
+.container {
+    margin-top: 40px;
+}
+
+h1 {
+    color: #e60023;
+}
+
+input {
+    padding: 10px;
+    width: 300px;
+    border-radius: 8px;
+    border: none;
+    margin-top: 10px;
+}
+
+button {
+    padding: 8px 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #e60023;
+    color: white;
+    cursor: pointer;
+}
+
 .images {
     display: flex;
     justify-content: center;
@@ -16,10 +42,25 @@ body {
     border-radius: 10px;
 }
 
-.preview {
+.card {
+    width: 300px;
     background: white;
-    padding: 20px;
-    margin-top: 20px;
-    display: inline-block;
-    border-radius: 10px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 25px auto;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+}
+
+.card img {
+    width: 100%;
+}
+
+.content {
+    padding: 15px;
+    text-align: left;
+}
+
+.tags {
+    color: #e60023;
+    font-weight: bold;
 }
