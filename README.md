@@ -1,8 +1,8 @@
 # 🚀 PinFlow
 
-PinFlow is a web-based tool designed to simplify affiliate marketing by generating Pinterest-ready content from product links.
+PinFlow is a web-based tool designed to simplify affiliate marketing by generating Pinterest-ready content from product links .
 
-This project is being built step-by-step with a focus on real-world DevOps and automation practices.
+This project is being built step-by-step with a focus on real-world DevOps and automation practices .
 
 ---
 
