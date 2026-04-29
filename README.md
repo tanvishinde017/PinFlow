@@ -8,7 +8,7 @@ This project is being built step-by-step with a focus on real-world DevOps and a
 
 ## 🎯 Project Goal
 
-To create a smart system that helps users:
+To create a smart system that helps users :
 
 - Generate Pinterest content from affiliate links  
 - Save time on manual content creation  
@@ -21,7 +21,8 @@ To create a smart system that helps users:
 In this phase, PinFlow provides:
 
 - 🔗 Input for affiliate product link  
-- 🖼️ Image URL support  
+- 🖼️ Image URL support
+- this phase is without ai  
 - ✨ Auto-generated:
   - Title  
   - Description  
