@@ -6,35 +6,42 @@
 </head>
 <body>
 
-<div class="container">
-    <h1>📌 PinFlow</h1>
+<div class="navbar">
+    <h2>📌 PinFlow</h2>
+</div>
 
-    <!-- INPUT -->
-    <form method="POST">
-        <input name="link" placeholder="Paste Product Link" required>
-        <button name="action" value="fetch">Fetch Images</button>
+<div class="container">
+
+    <!-- INPUT BAR -->
+    <form method="POST" class="search-box">
+        <input name="link" placeholder="Paste Amazon Product Link..." required>
+        <button name="action" value="fetch">Fetch</button>
     </form>
 
-    <!-- IMAGES -->
-    <div class="images">
+    <!-- IMAGE GRID -->
+    <div class="grid">
         {% for img in images %}
-        <form method="POST">
-            <input type="hidden" name="link" value="{{ request.form.get('link') }}">
-            <input type="hidden" name="selected_image" value="{{ img }}">
-            <img src="{{ img }}" class="img">
-            <button name="action" value="generate">Use</button>
-        </form>
+        <div class="grid-item">
+            <form method="POST">
+                <input type="hidden" name="link" value="{{ link }}">
+                <input type="hidden" name="selected_image" value="{{ img }}">
+                <img src="{{ img }}">
+                <button name="action" value="generate">Select</button>
+            </form>
+        </div>
         {% endfor %}
     </div>
 
-    <!-- RESULT -->
+    <!-- RESULT CARD -->
     {% if data %}
-    <div class="card">
+    <div class="result-card">
         <img src="{{ data.image }}">
 
-        <div class="content">
+        <div class="result-content">
             <h2>{{ data.title }}</h2>
-            <p>{{ data.description }}</p>
+
+            <p class="desc">{{ data.description }}</p>
+
             <p class="tags">{{ data.tags }}</p>
 
             <a href="{{ data.link }}" target="_blank">🔗 View Product</a>

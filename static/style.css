@@ -1,66 +1,121 @@
 body {
+    margin: 0;
+    font-family: 'Segoe UI';
     background: #f1f5f9;
-    font-family: sans-serif;
+}
+
+/* NAVBAR */
+.navbar {
+    background: white;
+    padding: 15px;
     text-align: center;
+    border-bottom: 1px solid #ddd;
 }
 
-.container {
-    margin-top: 40px;
-}
-
-h1 {
+.navbar h2 {
     color: #e60023;
+    margin: 0;
 }
 
-input {
-    padding: 10px;
-    width: 300px;
-    border-radius: 8px;
-    border: none;
-    margin-top: 10px;
+/* CONTAINER */
+.container {
+    padding: 20px;
 }
 
-button {
-    padding: 8px 15px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 8px;
+/* SEARCH */
+.search-box {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    width: 400px;
+    padding: 12px;
+    border-radius: 30px;
+    border: 1px solid #ccc;
+}
+
+.search-box button {
     background: #e60023;
     color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 30px;
     cursor: pointer;
 }
 
-.images {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
+/* GRID (Pinterest style) */
+.grid {
+    column-count: 3;
+    column-gap: 15px;
 }
 
-.img {
-    width: 150px;
+.grid-item {
+    break-inside: avoid;
+    margin-bottom: 15px;
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+}
+
+.grid-item img {
+    width: 100%;
     border-radius: 10px;
 }
 
-.card {
-    width: 300px;
+.grid-item button {
+    width: 100%;
+    margin-top: 8px;
+    background: #e60023;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* RESULT CARD */
+.result-card {
+    width: 350px;
+    margin: 40px auto;
     background: white;
     border-radius: 15px;
     overflow: hidden;
-    margin: 25px auto;
-    box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.2);
 }
 
-.card img {
+.result-card img {
     width: 100%;
 }
 
-.content {
+.result-content {
     padding: 15px;
-    text-align: left;
+}
+
+.result-content h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.desc {
+    margin: 10px 0;
+    color: #444;
 }
 
 .tags {
     color: #e60023;
     font-weight: bold;
+}
+
+.result-content a {
+    display: inline-block;
+    margin-top: 10px;
+    color: white;
+    background: #e60023;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
 }
