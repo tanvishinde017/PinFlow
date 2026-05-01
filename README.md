@@ -1,199 +1,165 @@
-# 🚀 PinFlow – Pinterest Content Automation System
+🚀 PinFlow – Pinterest Content Automation System
 
-## 📌 Introduction
+PinFlow is a web-based application designed to simplify and automate the process of creating Pinterest-ready content from product links.
 
-PinFlow is a web-based automation system designed to simplify the process of generating Pinterest-ready content from product links.
+It helps reduce manual effort in affiliate marketing workflows by generating structured content and visuals through a simple and efficient pipeline.
 
-In modern affiliate marketing and content creation workflows, a significant amount of time is spent manually:
+📌 Introduction
 
-- Searching for relevant images  
-- Writing engaging titles  
-- Creating descriptions  
-- Adding optimized hashtags  
+In modern content creation and affiliate marketing, creating Pinterest posts manually is repetitive and time-consuming.
 
-PinFlow addresses this inefficiency by automating these repetitive tasks through a structured pipeline.
+It usually involves:
 
----
+Searching for relevant images
+Writing engaging titles
+Creating descriptions
+Adding hashtags
 
-## 🧠 Problem Statement
+PinFlow solves this problem by automating these steps into a smooth workflow.
 
-Content creators and affiliate marketers face several challenges:
+🧠 Problem Statement
 
-- ⏳ High time consumption for manual content creation  
-- 🎯 Difficulty in maintaining consistency in quality  
-- 🔁 Repetitive workflow for each product  
-- 📉 Lack of automation in social media posting  
+Content creators and affiliate marketers often face:
 
-These challenges reduce productivity and scalability.
+⏳ Time-consuming manual work
+🔁 Repetitive tasks for each product
+📉 Inconsistent content quality
+🚫 Lack of automation tools
 
----
+These challenges reduce productivity and make scaling difficult.
 
-## 💡 Proposed Solution
+💡 Solution
 
-PinFlow provides a streamlined system that:
+PinFlow provides a simple system that:
 
-1. Accepts a product link as input  
-2. Extracts meaningful product data  
-3. Generates relevant visual and textual content  
-4. Displays a ready-to-use Pinterest-style post  
+Accepts a product link
+Extracts product information
+Generates relevant images
+Creates structured content
+Displays a ready-to-use preview
 
-This reduces manual effort and improves workflow efficiency.
+This reduces effort and improves efficiency.
 
----
+⚙️ System Architecture
+🔹 Frontend
+Built with HTML and CSS
+Handles user input and UI rendering
+🔹 Backend
+Built with Python and Flask
+Handles routing, logic, and processing
+🔹 Data Layer
+Uses BeautifulSoup for scraping
+Uses Requests for HTTP handling
+🔄 Workflow
+User enters product link
+App extracts product title
+Keywords are generated
+Images are fetched
+User selects an image
+Content is generated
+Final preview is displayed
+🧩 Features (Phase 3)
+Product link input
+Product title extraction
+Dynamic image generation
+Image selection system
+Basic content generation (title, description, tags)
+Pinterest-style preview UI
+🧱 Tech Stack
 
-## ⚙️ System Architecture
+Backend:
 
-The system follows a simple client-server architecture:
+Python
+Flask
 
-### 🔹 Frontend Layer
-- Built using HTML and CSS  
-- Responsible for:
-  - User input handling  
-  - Image selection UI  
-  - Displaying generated content  
+Frontend:
 
-### 🔹 Backend Layer
-- Built using Python and Flask  
-- Handles:
-  - Routing and request processing  
-  - Data extraction logic  
-  - Content generation  
-  - Image generation logic  
+HTML
+CSS
 
-### 🔹 Data Processing Layer
-- Uses BeautifulSoup for web scraping  
-- Uses Requests for HTTP communication  
+Libraries:
 
----
+BeautifulSoup
+Requests
 
-## 🔄 Workflow
+Tools:
 
-The working of the system can be described step-by-step:
+Git
+GitHub
+📂 Project Structure
 
-1. User enters a product link  
-2. Backend extracts product title using web scraping  
-3. Title is processed to generate relevant keywords  
-4. Keywords are used to fetch related images  
-5. User selects an image  
-6. System generates:
-   - Title  
-   - Description  
-   - Hashtags  
-7. Final Pinterest-style preview is displayed  
-
----
-
-## 🧩 Core Modules
-
-### 1. Input Module
-Handles user input and form submission.
-
-### 2. Data Extraction Module
-- Extracts product title from HTML
-- Uses BeautifulSoup parsing techniques
-
-### 3. Image Generation Module
-- Generates image URLs using keyword-based queries
-- Provides multiple image options
-
-### 4. Content Generation Module
-- Generates structured content:
-  - Title
-  - Description
-  - Tags
-- Currently rule-based
-
-### 5. Presentation Module
-- Displays final output in Pinterest-style UI
-
----
-
-## 🧱 Tech Stack
-
-### Backend
-- Python  
-- Flask  
-
-### Frontend
-- HTML  
-- CSS  
-
-### Libraries
-- BeautifulSoup  
-- Requests  
-
-### Version Control
-- Git  
-- GitHub  
-
----
-
-## 📂 Project Structure
 PinFlow/
 │
 ├── static/
-│ └── style.css
+│ └── style.css # UI Styling
 │
 ├── templates/
-│ └── index.html
+│ └── index.html # Frontend Layout
 │
-├── app.py
-├── requirements.txt
-├── README.md
+├── app.py # Main Application Logic
+├── requirements.txt # Dependencies
+├── README.md # Documentation
 
+▶️ Installation & Setup
 
----
-
-## ▶️ Installation & Execution
-
-### Step 1: Clone Repository
-
-```bash
+Step 1: Clone Repository
 git clone https://github.com/tanvishinde017/PinFlow.git
+
 cd PinFlow
 
 Step 2: Install Dependencies
 py -m pip install flask requests beautifulsoup4
+
 Step 3: Run Application
 python app.py
+
 Step 4: Open in Browser
 http://127.0.0.1:5000
-🚀 Future Enhancements
-Phase 4
+
+🚀 Future Roadmap
+
+Phase 4:
+
 Pinterest API integration
-User authentication
+User login system
 Board selection
-Direct pin publishing
-Phase 5
-AI-based content generation
+Direct pin posting
+
+Phase 5:
+
+AI content generation
 SEO optimization
 Smart hashtag suggestions
-Phase 6
+
+Phase 6:
+
 Post scheduling
 Analytics dashboard
 Multi-platform support
-Phase 7
-Dockerization
+
+Phase 7:
+
+Docker containerization
 CI/CD pipeline
 Cloud deployment
 🧠 Learning Outcomes
 
-This project demonstrates understanding of:
+Through this project, I am learning:
 
-Web application development using Flask
+Flask-based web development
 Web scraping techniques
-Client-server architecture
-Automation system design
-Basic DevOps concepts
-🤝 Contribution Guidelines
+System design fundamentals
+Automation workflows
+Version control using Git
+🤝 Contribution
 
-Contributions are encouraged.
+Contributions are welcome.
 
-Steps to contribute:
+Steps:
 
 Fork the repository
-Create a new branch
-Implement changes
+Create a branch
+Make changes
 Submit a pull request
 💸 Support
 
@@ -203,7 +169,7 @@ If you find it useful:
 
 ⭐ Star the repository
 Share it
-Consider sponsoring
+Sponsor development
 
 👉 https://github.com/sponsors/tanvishinde017
 
@@ -213,7 +179,6 @@ Tanavi Shinde
 BSc IT Student
 Aspiring Developer & DevOps Engineer
 
-⭐ Acknowledgement
+⭐ Note
 
-This project is part of a continuous learning journey focused on building real-world systems and automation tools.
-
+This is an actively evolving project focused on building a real-world automation system.
