@@ -1,92 +1,60 @@
 from flask import Flask, render_template, request
 import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
 
-# 🔥 AI (OLLAMA)
-def generate_ai_content(link):
+# -----------------------------
+# Get product title from Amazon
+# -----------------------------
+def get_product_data(link):
     try:
-        prompt = f"""
-        You are a professional Pinterest marketer.
-
-        Generate HIGH QUALITY content.
-
-        Rules:
-        - Title: catchy, max 8 words
-        - Description: 1-2 short lines, engaging
-        - Tags: exactly 5 trending hashtags
-
-        Product: {link}
-
-        STRICT FORMAT:
-        Title: ...
-        Description: ...
-        Tags: ...
-        """
-
-        response = requests.post(
-            "http://localhost:11434/api/generate",
-            json={
-                "model": "tinyllama",
-                "prompt": prompt,
-                "stream": False,
-                "options": {
-                    "num_predict": 120
-                }
-            }
-        )
-
-        text = response.json().get("response", "")
-
-        # ✅ SAFE PARSING
-        title = ""
-        description = ""
-        tags = ""
-
-        for line in text.split("\n"):
-            if "Title:" in line:
-                title = line.replace("Title:", "").strip()
-            elif "Description:" in line:
-                description = line.replace("Description:", "").strip()
-            elif "Tags:" in line:
-                tags = line.replace("Tags:", "").strip()
-
-        return {
-            "title": title or "🔥 Trending Product",
-            "description": description or "Check this amazing product!",
-            "tags": tags or "#trending #shopping #deal #amazon #viral"
+        headers = {
+            "User-Agent": "Mozilla/5.0"
         }
 
-    except Exception as e:
-        return {
-            "title": "Error",
-            "description": str(e),
-            "tags": ""
-        }
+        response = requests.get(link, headers=headers, timeout=10)
+        soup = BeautifulSoup(response.content, "html.parser")
+
+        title = soup.find(id="productTitle")
+
+        if title:
+            return title.get_text().strip()
+
+        return "Trending Product"
+
+    except Exception:
+        return "Trending Product"
 
 
-# 🖼️ IMAGE FETCH (keyword based)
-def get_images(link):
-    try:
-        keyword = link.split("/")[-1]
-        keyword = keyword.replace("-", " ")
-
-        return [
-            f"https://source.unsplash.com/300x300/?{keyword}",
-            f"https://source.unsplash.com/301x301/?{keyword}",
-            f"https://source.unsplash.com/302x302/?{keyword}"
-        ]
-
-    except:
-        return [
-            "https://picsum.photos/300",
-            "https://picsum.photos/301",
-            "https://picsum.photos/302"
-        ]
+# -----------------------------
+# Generate placeholder content
+# -----------------------------
+def generate_content(title):
+    return {
+        "title": title,
+        "description": f"🔥 Check out this amazing product: {title}",
+        "tags": "#amazon #shopping #deal #trending #viral"
+    }
 
 
-# 🌐 MAIN ROUTE (FIXED)
+# -----------------------------
+# Fetch matching images
+# -----------------------------
+def get_images_from_title(title):
+    keyword = " ".join(title.split()[:3])
+
+    return [
+        f"https://source.unsplash.com/300x300/?{keyword}",
+        f"https://source.unsplash.com/301x301/?{keyword}",
+        f"https://source.unsplash.com/302x302/?{keyword}"
+    ]
+
+
+# -----------------------------
+# Main route
+# -----------------------------
 @app.route("/", methods=["GET", "POST"])
 def index():
     images = []
@@ -97,12 +65,15 @@ def index():
         link = request.form.get("link")
         action = request.form.get("action")
 
+        title = get_product_data(link)
+
         if action == "fetch":
-            images = get_images(link)
+            images = get_images_from_title(title)
 
         elif action == "generate":
             selected_image = request.form.get("selected_image")
-            content = generate_ai_content(link)
+
+            content = generate_content(title)
 
             data = {
                 "image": selected_image,
@@ -112,10 +83,18 @@ def index():
                 "link": link
             }
 
-            images = get_images(link)  # keep images visible
+            images = get_images_from_title(title)
 
-    return render_template("index.html", images=images, data=data, link=link)
+    return render_template(
+        "index.html",
+        images=images,
+        data=data,
+        link=link
+    )
 
 
+# -----------------------------
+# Run app
+# -----------------------------
 if __name__ == "__main__":
     app.run(debug=True)
