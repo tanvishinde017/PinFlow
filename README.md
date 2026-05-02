@@ -1,151 +1,157 @@
-# 🚀 PinFlow – Pinterest Content Automation System
+🚀 PinFlow – Pinterest Content Automation System
 
-PinFlow is a web-based application designed to **automate Pinterest content creation** from product links.
+PinFlow is a modern web application that automates Pinterest content creation from product links (e.g., Amazon).
 
-It streamlines affiliate marketing workflows by generating **ready-to-use titles, descriptions, hashtags, and visuals** — all in one place.
+It helps creators and affiliate marketers instantly generate:
 
----
+📌 Titles
+📝 Descriptions
+🔖 Hashtags
+🖼️ Visual content
 
-## 📌 Introduction
+All in one seamless workflow.
 
-Creating Pinterest content manually is repetitive and time-consuming.  
-Each post typically requires:
+🌟 Overview
 
-- Finding relevant images  
-- Writing engaging titles  
-- Creating descriptions  
-- Adding hashtags  
+Creating Pinterest posts manually is repetitive and inefficient.
 
-**PinFlow automates this entire workflow**, helping creators focus on scaling instead of manual work.
+PinFlow solves this by transforming a single product link into a ready-to-publish Pinterest card in seconds.
 
----
+🎯 Key Features
+🔗 Paste any product link
+🧾 Automatic product title extraction
+🖼️ Smart image suggestions (dynamic grid)
+🎯 Image selection system
+✍️ AI-style content generation
+📌 Pinterest-style live preview
+📋 One-click copy (title, description, hashtags)
+🔄 Reset & regenerate workflow
+🧠 Problem Statement
 
-## 🧠 Problem Statement
+Content creators face:
 
-Content creators and affiliate marketers often struggle with:
+⏳ Time-consuming manual work
+🔁 Repetitive content creation
+📉 Inconsistent quality
+🚫 Lack of automation tools
+💡 Solution
 
-- ⏳ Time-consuming manual processes  
-- 🔁 Repetitive tasks for every product  
-- 📉 Inconsistent content quality  
-- 🚫 Lack of automation tools  
+PinFlow automates the full pipeline:
+Product Link → Data Extraction → Image Selection → Content Generation → Preview
 
-These challenges reduce productivity and make scaling difficult.
+✅ Result:
 
----
+Faster workflow
+Better consistency
+Scalable content creation
+⚙️ System Architecture
+🔹 Frontend
+HTML5
+CSS3 (Pinterest-inspired UI)
+Vanilla JavaScript
+🔹 Backend
+Python
+Flask
+🔹 Data Processing
+BeautifulSoup → HTML parsing
+Requests → HTTP handling
+🔄 Application Workflow
+User enters product link
+Backend extracts product details
+Keywords are generated
+Images are fetched dynamically
+User selects preferred image
+Content is generated automatically
+Final Pinterest-style preview is shown
+🧩 Tech Stack
+🖥 Backend
+Python
+Flask
+🌐 Frontend
+HTML
+CSS
+JavaScript
+📦 Libraries
+BeautifulSoup
+Requests
+🛠 Tools
+Git
+GitHub
+📁 Project Structure
 
-## 💡 Solution
+PinFlow/
+│── app.py
 
-PinFlow provides a simple and efficient pipeline:
+├── templates/
+│ └── index.html
 
-- 🔗 Accepts a product link  
-- 🧾 Extracts product information  
-- 🖼️ Fetches relevant images  
-- ✍️ Generates structured content  
-- 👀 Displays a ready-to-use preview  
+├── static/
+│ ├── style.css
+│ └── script.js
 
-✅ Result: Faster workflow, better consistency, and improved efficiency.
+└── README.md
 
----
+▶️ Getting Started
+1️⃣ Clone Repository
 
-## ⚙️ System Architecture
+git clone https://github.com/tanvishinde017/PinFlow.git
 
-### 🔹 Frontend
-- Built with **HTML + CSS**
-- Handles user input and UI rendering  
+cd PinFlow
 
-### 🔹 Backend
-- Built with **Python + Flask**
-- Handles routing, logic, and processing  
+2️⃣ Install Dependencies
 
-### 🔹 Data Layer
-- **BeautifulSoup** → HTML parsing  
-- **Requests** → HTTP handling  
+pip install flask requests beautifulsoup4
 
----
+3️⃣ Run Application
 
-## 🔄 Workflow
+python app.py
 
-1. User enters product link  
-2. Application extracts product title  
-3. Keywords are generated  
-4. Images are fetched  
-5. User selects an image  
-6. Content is generated  
-7. Final preview is displayed  
+4️⃣ Open in Browser
 
----
+http://127.0.0.1:5000
 
-## 🧩 Features
-
-- ✅ Product link input  
-- 🧾 Product title extraction  
-- 🖼️ Dynamic image generation  
-- 🎯 Image selection system  
-- ✍️ Content generation (title, description, tags)  
-- 📌 Pinterest-style preview UI  
-
----
-
-## 🧱 Tech Stack
-
-### Backend
-- Python  
-- Flask  
-
-### Frontend
-- HTML  
-- CSS  
-
-### Libraries
-- BeautifulSoup  
-- Requests  
-
-### Tools
-- Git  
-- GitHub  
-
----
-
-
-
+⚠️ Important Notes
+Amazon may block scraping → sometimes images may not load
+This project is for learning and demonstration purposes
+For production use → APIs are recommended instead of scraping
 🚀 Future Roadmap
-Phase 4
-  Pinterest API integration
-  User authentication
-  Board selection
-  Direct pin publishing
-Phase 5
-  AI content generation
-  SEO optimization
-  Smart hashtag suggestions
-Phase 6
-  Post scheduling
-  Analytics dashboard
-  Multi-platform support
-Phase 7
-  Docker containerization
-  CI/CD pipeline
-  Cloud deployment
+🔹 Phase 4
+Pinterest API integration
+User authentication
+Board selection
+Direct pin publishing
+🔹 Phase 5
+AI content generation (GPT-based)
+SEO optimization
+Smart hashtag system
+🔹 Phase 6
+Post scheduling
+Analytics dashboard
+Multi-platform publishing
+🔹 Phase 7
+Docker containerization
+CI/CD pipeline
+Cloud deployment (AWS / Azure)
 🧠 Learning Outcomes
 
-Through this project, I am learning:
+This project demonstrates:
 
-Flask-based web development
-Web scraping techniques
-System design fundamentals
+Flask-based full-stack development
+Web scraping fundamentals
+UI/UX design principles
 Automation workflows
-Version control using Git
+Version control using Git & GitHub
 🤝 Contributing
 
 Contributions are welcome!
 
 Fork the repository
-Create a branch
+Create a new branch
 Make your changes
 Submit a Pull Request
 💸 Support
 
-If you find this project useful:
+If you found this project useful:
 
 ⭐ Star the repository
 📢 Share it
@@ -156,5 +162,5 @@ If you find this project useful:
 👩‍💻 Author
 
 Tanavi Shinde
-BSc IT Student
-Aspiring Developer & DevOps Engineer
+🎓 BSc IT Student
+🚀 Aspiring Developer & DevOps Engineer
