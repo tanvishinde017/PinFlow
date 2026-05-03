@@ -1,5 +1,28 @@
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Env
 .env
 venv/
+env/
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Flask
+instance/
+
+# Logs
+*.log
+
+# Build
+dist/
+build/
+
+# Images (optional)
+static/downloads/

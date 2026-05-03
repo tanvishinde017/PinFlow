@@ -1,4 +1,36 @@
-Flask
-requests
-beautifulsoup4
-gunicorn
+# Core
+Flask==3.0.3
+gunicorn==22.0.0
+
+# Scraping
+requests==2.32.3
+beautifulsoup4==4.12.3
+lxml==5.2.2
+
+# AI (Claude)
+anthropic==0.34.1
+
+# Image processing
+Pillow==10.4.0
+
+# Database (SaaS upgrade)
+Flask-SQLAlchemy==3.1.1
+psycopg2-binary==2.9.9
+
+# Auth / Security
+Flask-Login==0.6.3
+Flask-Bcrypt==1.0.1
+
+# Forms & validation
+Flask-WTF==1.2.1
+email-validator==2.2.0
+
+# Background jobs (for auto-posting later)
+celery==5.4.0
+redis==5.0.7
+
+# Environment variables
+python-dotenv==1.0.1
+
+# CORS (if you add React frontend)
+flask-cors==4.0.1
