@@ -1,14 +1,14 @@
 # 🚀 PinFlow – Pinterest Content Automation System
 
-PinFlow is a web-based application designed to **automate Pinterest content creation** from product links.
+PinFlow is a web-based application designed to **automate Pinterest content creation** from product links .
 
-It streamlines affiliate marketing workflows by generating **ready-to-use titles, descriptions, hashtags, and visuals** — all in one place.
+It streamlines affiliate marketing workflows by generating **ready-to-use titles, descriptions, hashtags, and visuals** — all in one place .
 
 ---
 
 ## 🌟 Overview
 
-Creating Pinterest content manually is repetitive and time-consuming.  
+Creating Pinterest content manually is repetitive and time-consuming .  
 Each post typically requires:
 
 - 🖼️ Finding relevant images  
