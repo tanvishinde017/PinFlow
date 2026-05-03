@@ -23,10 +23,15 @@ Each post typically requires:
 Content creators face:
 
 ⏳ Time-consuming manual work
+
 🔁 Repetitive content creation
+
 📉 Inconsistent quality
+
 🚫 Lack of automation tools
+
 💡 Solution
+
 
 PinFlow automates the full pipeline:
 Product Link → Data Extraction → Image Selection → Content Generation → Preview
