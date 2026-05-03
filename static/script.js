@@ -1,288 +1,455 @@
-/* ═══════════════════════════════════════
-   PINFLOW · script.js
-═══════════════════════════════════════ */
+/* ─────────────────────────────────────────────
+   PinFlow Pro — script.js
+   Amazon → AI Pinterest Content Generator
+───────────────────────────────────────────── */
 
-let state = {
-  title: "",
-  link: "",
+// ── STATE ──────────────────────────────────────
+const state = {
+  link:          "",
+  title:         "",
+  price:         "N/A",
+  productImage:  null,
   selectedImage: null,
-  images: [],
+  tone:          "viral",
+  content:       null,
 };
 
-/* ─────────────────────────────────────
-   FETCH PRODUCT + IMAGES
-───────────────────────────────────── */
-async function fetchProduct() {
-  const link = document.getElementById("linkInput").value.trim();
-  if (!link) return shakInput();
+// ── DOM REFS ────────────────────────────────────
+const $ = (id) => document.getElementById(id);
 
-  setLoading(true, "Fetching product data…");
-  hide("productStrip");
-  hide("gridSection");
-  hide("resultSection");
+const urlInput      = $("product-url");
+const fetchBtn      = $("fetch-btn");
+const generateBtn   = $("generate-btn");
+const variationsBtn = $("variations-btn");
+const saveBtn       = $("save-btn");
+const copyBtn       = $("copy-btn");
+const resetBtn      = $("reset-btn");
 
-  try {
-    const res = await fetch("/api/fetch", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ link }),
-    });
+const stepProduct    = $("step-product");
+const stepImages     = $("step-images");
+const stepContent    = $("step-content");
+const stepVariations = $("step-variations");
 
-    if (!res.ok) throw new Error("Server error");
-    const data = await res.json();
+const imageGrid      = $("image-grid");
+const variationsGrid = $("variations-grid");
+const historyList    = $("history-list");
+const historyCount   = $("history-count");
+const saveSuccess    = $("save-success");
 
-    state.title = data.title;
-    state.link = data.link;
-    state.images = data.images;
-    state.selectedImage = null;
+// ── TABS ────────────────────────────────────────
+document.querySelectorAll(".tab-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+    document.querySelectorAll(".tab-section").forEach((s) => s.classList.remove("active"));
 
-    // Product strip
-    document.getElementById("stripTitle").textContent = data.title;
-    const stripLink = document.getElementById("stripLink");
-    stripLink.href = data.link;
+    btn.classList.add("active");
+    const section = document.getElementById(`tab-${btn.dataset.tab}`);
+    section.classList.add("active");
 
-    const stripImgWrap = document.getElementById("stripImgWrap");
-    if (data.product_image) {
-      document.getElementById("stripImg").src = data.product_image;
-      show("stripImgWrap");
-    } else {
-      hide("stripImgWrap");
-    }
-
-    show("productStrip");
-
-    // Render grid
-    setLoading(true, "Loading images…");
-    renderGrid(data.images);
-
-    setTimeout(() => {
-      setLoading(false);
-      show("gridSection");
-      scrollTo("gridSection");
-    }, 300);
-
-  } catch (err) {
-    setLoading(false);
-    alert("Could not fetch product. Check the link and try again.");
-  }
-}
-
-
-/* ─────────────────────────────────────
-   RENDER MASONRY GRID
-───────────────────────────────────── */
-function renderGrid(images) {
-  const grid = document.getElementById("masonryGrid");
-  grid.innerHTML = "";
-
-  images.forEach((src, i) => {
-    const item = document.createElement("div");
-    item.className = "grid-item";
-    item.dataset.index = i;
-    item.onclick = () => selectImage(item, src);
-
-    const img = document.createElement("img");
-    img.src = src;
-    img.alt = "Product image option";
-    img.loading = "lazy";
-
-    const overlay = document.createElement("div");
-    overlay.className = "grid-item-overlay";
-
-    const chip = document.createElement("button");
-    chip.className = "select-chip";
-    chip.textContent = "Select";
-    chip.onclick = (e) => { e.stopPropagation(); selectImage(item, src); };
-    overlay.appendChild(chip);
-
-    const badge = document.createElement("div");
-    badge.className = "selected-badge";
-    badge.textContent = "✓ Selected";
-
-    item.appendChild(img);
-    item.appendChild(overlay);
-    item.appendChild(badge);
-    grid.appendChild(item);
-  });
-
-  hide("generateBar");
-}
-
-
-/* ─────────────────────────────────────
-   SELECT IMAGE
-───────────────────────────────────── */
-function selectImage(item, src) {
-  document.querySelectorAll(".grid-item").forEach(el => el.classList.remove("selected"));
-  item.classList.add("selected");
-  state.selectedImage = src;
-
-  // Update generate bar
-  const bar = document.getElementById("generateBar");
-  document.getElementById("genThumb").src = src;
-  document.getElementById("genLabel").textContent = "1 image selected";
-  show("generateBar");
-}
-
-
-/* ─────────────────────────────────────
-   GENERATE PIN CONTENT
-───────────────────────────────────── */
-async function generatePin() {
-  if (!state.selectedImage) return;
-
-  setLoading(true, "Generating your Pinterest card…");
-  hide("gridSection");
-  hide("resultSection");
-
-  try {
-    const res = await fetch("/api/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: state.title,
-        selected_image: state.selectedImage,
-        link: state.link,
-      }),
-    });
-
-    if (!res.ok) throw new Error("Server error");
-    const data = await res.json();
-
-    // Populate result
-    document.getElementById("pinImage").src = data.image;
-    document.getElementById("pinCardTitle").textContent = data.title;
-    document.getElementById("pinCardTags").textContent = data.hashtags;
-
-    document.getElementById("titleField").value = data.title;
-    document.getElementById("descField").value = data.description;
-    document.getElementById("tagsField").value = data.hashtags;
-
-    const pl = document.getElementById("productLink");
-    pl.href = data.link || state.link;
-
-    setLoading(false);
-    show("gridSection");
-    show("resultSection");
-    scrollTo("resultSection");
-
-  } catch (err) {
-    setLoading(false);
-    show("gridSection");
-    alert("Generation failed. Please try again.");
-  }
-}
-
-
-/* ─────────────────────────────────────
-   COPY FIELD
-───────────────────────────────────── */
-function copyField(fieldId, btn) {
-  const el = document.getElementById(fieldId);
-  const text = el.value;
-
-  navigator.clipboard.writeText(text).then(() => {
-    const orig = btn.textContent;
-    btn.textContent = "✓ Copied!";
-    btn.classList.add("copied");
-    setTimeout(() => {
-      btn.textContent = orig;
-      btn.classList.remove("copied");
-    }, 2000);
-  }).catch(() => {
-    el.select();
-    document.execCommand("copy");
-  });
-}
-
-
-/* ─────────────────────────────────────
-   RESET
-───────────────────────────────────── */
-function resetAll() {
-  state = { title: "", link: "", selectedImage: null, images: [] };
-  document.getElementById("linkInput").value = "";
-  hide("productStrip");
-  hide("gridSection");
-  hide("resultSection");
-  hide("loaderWrap");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-
-/* ─────────────────────────────────────
-   HELPERS
-───────────────────────────────────── */
-function show(id) {
-  const el = document.getElementById(id);
-  if (el) el.style.display = "";
-}
-
-function hide(id) {
-  const el = document.getElementById(id);
-  if (el) el.style.display = "none";
-}
-
-function setLoading(on, msg) {
-  const wrap = document.getElementById("loaderWrap");
-  const txt  = document.getElementById("loaderText");
-  const btn  = document.getElementById("fetchBtn");
-
-  if (on) {
-    if (txt && msg) txt.textContent = msg;
-    wrap.style.display = "flex";
-    if (btn) btn.disabled = true;
-  } else {
-    wrap.style.display = "none";
-    if (btn) btn.disabled = false;
-  }
-}
-
-function scrollTo(id) {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function shakInput() {
-  const box = document.getElementById("searchBox");
-  box.style.animation = "none";
-  box.offsetHeight; // reflow
-  box.style.animation = "shake 0.4s ease";
-  setTimeout(() => { box.style.animation = ""; }, 400);
-}
-
-/* shake animation injected */
-const style = document.createElement("style");
-style.textContent = `
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  20%      { transform: translateX(-8px); }
-  40%      { transform: translateX(8px); }
-  60%      { transform: translateX(-5px); }
-  80%      { transform: translateX(5px); }
-}`;
-document.head.appendChild(style);
-
-/* Enter key triggers fetch */
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("linkInput").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") fetchProduct();
+    if (btn.dataset.tab === "history") loadHistory();
   });
 });
 
-async function loadHistory() {
-  const res = await fetch("/api/history");
-  const data = await res.json();
-
-  const box = document.getElementById("historyBox");
-  box.innerHTML = "";
-
-  data.reverse().forEach(item => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <img src="${item.image}" width="100"/>
-      <p>${item.title}</p>
-    `;
-    box.appendChild(div);
+// ── TONE PILLS ──────────────────────────────────
+document.querySelectorAll(".tone-pill").forEach((pill) => {
+  pill.addEventListener("click", () => {
+    document.querySelectorAll(".tone-pill").forEach((p) => p.classList.remove("active"));
+    pill.classList.add("active");
+    state.tone = pill.dataset.tone;
   });
+});
+
+// ── LOADING HELPERS ─────────────────────────────
+function setLoading(btn, loading) {
+  const text   = btn.querySelector(".btn-text");
+  const loader = btn.querySelector(".btn-loader");
+  btn.disabled = loading;
+  if (loading) {
+    text?.classList.add("hidden");
+    loader?.classList.remove("hidden");
+  } else {
+    text?.classList.remove("hidden");
+    loader?.classList.add("hidden");
+  }
+}
+
+// ── CHAR COUNTERS ───────────────────────────────
+$("out-title").addEventListener("input", function () {
+  $("title-count").textContent = `${this.value.length}/100`;
+});
+$("out-desc").addEventListener("input", function () {
+  $("desc-count").textContent = `${this.value.length}/500`;
+});
+
+// ── STEP 1: FETCH PRODUCT ───────────────────────
+fetchBtn.addEventListener("click", fetchProduct);
+urlInput.addEventListener("keydown", (e) => { if (e.key === "Enter") fetchProduct(); });
+
+async function fetchProduct() {
+  const link = urlInput.value.trim();
+  if (!link) return flash(urlInput, "Please paste an Amazon URL first.");
+
+  setLoading(fetchBtn, true);
+
+  try {
+    const res  = await fetch("/api/fetch", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ link }),
+    });
+    const data = await res.json();
+
+    if (data.error) throw new Error(data.error);
+
+    // Populate state
+    state.link  = link;
+    state.title = data.title;
+    state.price = data.price;
+    state.productImage = data.product_image;
+
+    // Show product card
+    $("product-title-display").textContent = data.title;
+    $("product-price-display").textContent = data.price !== "N/A" ? data.price : "Price unavailable";
+
+    const productImg = $("product-img");
+    if (data.product_image) {
+      productImg.src = data.product_image;
+    } else {
+      productImg.src = `https://picsum.photos/seed/${Math.floor(Math.random()*999)}/300/400`;
+    }
+
+    reveal(stepProduct);
+
+    // Render image picker
+    renderImageGrid(data.images);
+    reveal(stepImages);
+
+    // Scroll to product
+    stepProduct.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  } catch (err) {
+    showError("Could not fetch product. Try a direct Amazon product URL.");
+    console.error(err);
+  }
+
+  setLoading(fetchBtn, false);
+}
+
+// ── IMAGE GRID ──────────────────────────────────
+function renderImageGrid(images) {
+  imageGrid.innerHTML = "";
+  images.forEach((src) => {
+    const div = document.createElement("div");
+    div.className = "img-option";
+    div.innerHTML = `
+      <img src="${src}" alt="Option" loading="lazy" />
+      <div class="check-mark">✓</div>
+    `;
+    div.addEventListener("click", () => selectImage(div, src));
+    imageGrid.appendChild(div);
+  });
+
+  // Auto-select first
+  if (imageGrid.firstChild) {
+    selectImage(imageGrid.firstChild, images[0]);
+  }
+}
+
+function selectImage(el, src) {
+  document.querySelectorAll(".img-option").forEach((i) => i.classList.remove("selected"));
+  el.classList.add("selected");
+  state.selectedImage = src;
+}
+
+// ── STEP 2: GENERATE AI CONTENT ─────────────────
+generateBtn.addEventListener("click", generateContent);
+
+async function generateContent() {
+  if (!state.title) return;
+
+  setLoading(generateBtn, true);
+  stepContent.classList.add("hidden");
+
+  try {
+    const res  = await fetch("/api/generate", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ title: state.title, price: state.price, tone: state.tone }),
+    });
+    const data = await res.json();
+
+    state.content = data;
+
+    // Populate editor
+    $("out-title").value = data.pin_title || "";
+    $("out-desc").value  = data.description || "";
+    $("out-tags").value  = data.hashtags || "";
+    $("out-cta").value   = data.cta || "";
+
+    // Update char counts
+    $("title-count").textContent = `${($("out-title").value).length}/100`;
+    $("desc-count").textContent  = `${($("out-desc").value).length}/500`;
+
+    reveal(stepContent);
+    stepContent.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    // Reset save banner
+    saveSuccess.classList.add("hidden");
+
+  } catch (err) {
+    showError("AI generation failed. Please try again.");
+    console.error(err);
+  }
+
+  setLoading(generateBtn, false);
+}
+
+// ── A/B VARIATIONS ──────────────────────────────
+variationsBtn.addEventListener("click", async () => {
+  if (!state.title) return;
+
+  variationsBtn.textContent = "Generating…";
+  variationsBtn.disabled = true;
+  stepVariations.classList.add("hidden");
+
+  try {
+    const res  = await fetch("/api/variations", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ title: state.title, price: state.price }),
+    });
+    const data = await res.json();
+
+    renderVariations(data.variations || []);
+    reveal(stepVariations);
+    stepVariations.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  } catch (err) {
+    showError("Could not generate variations.");
+    console.error(err);
+  }
+
+  variationsBtn.textContent = "A/B All Tones";
+  variationsBtn.disabled = false;
+});
+
+function renderVariations(variations) {
+  variationsGrid.innerHTML = "";
+  variations.forEach((v) => {
+    const card = document.createElement("div");
+    card.className = "variation-card";
+    card.innerHTML = `
+      <p class="variation-tone tone-${v.tone}">${toneEmoji(v.tone)} ${capitalize(v.tone)}</p>
+      <p class="variation-title">${v.pin_title || ""}</p>
+      <p class="variation-desc">${v.description || ""}</p>
+      <p class="variation-tags">${v.hashtags || ""}</p>
+      <button class="variation-select">Use this →</button>
+    `;
+    card.querySelector(".variation-select").addEventListener("click", () => {
+      state.content = v;
+      state.tone = v.tone;
+      $("out-title").value = v.pin_title || "";
+      $("out-desc").value  = v.description || "";
+      $("out-tags").value  = v.hashtags || "";
+      $("out-cta").value   = v.cta || "";
+      reveal(stepContent);
+      stepContent.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    variationsGrid.appendChild(card);
+  });
+}
+
+function toneEmoji(tone) {
+  return { viral: "🔥", luxury: "💎", casual: "😊", affiliate: "💰" }[tone] || "";
+}
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// ── SAVE PIN ─────────────────────────────────────
+saveBtn.addEventListener("click", async () => {
+  if (!state.content) return;
+
+  setLoading(saveBtn, true);
+
+  const payload = {
+    pin_title:      $("out-title").value,
+    description:    $("out-desc").value,
+    hashtags:       $("out-tags").value,
+    cta:            $("out-cta").value,
+    tone:           state.tone,
+    selected_image: state.selectedImage,
+    link:           state.link,
+  };
+
+  try {
+    await fetch("/api/save", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify(payload),
+    });
+    saveSuccess.classList.remove("hidden");
+    setTimeout(() => saveSuccess.classList.add("hidden"), 3000);
+  } catch (err) {
+    showError("Save failed. Please try again.");
+  }
+
+  setLoading(saveBtn, false);
+});
+
+// ── COPY CONTENT ─────────────────────────────────
+copyBtn.addEventListener("click", () => {
+  const text = [
+    $("out-title").value,
+    "",
+    $("out-desc").value,
+    "",
+    $("out-tags").value,
+    "",
+    $("out-cta").value,
+  ].join("\n");
+
+  navigator.clipboard.writeText(text).then(() => {
+    copyBtn.textContent = "Copied! ✓";
+    setTimeout(() => (copyBtn.textContent = "Copy Content"), 2000);
+  });
+});
+
+// ── RESET ─────────────────────────────────────────
+resetBtn.addEventListener("click", () => {
+  urlInput.value = "";
+  Object.assign(state, { link: "", title: "", price: "N/A", selectedImage: null, content: null });
+  [stepProduct, stepImages, stepContent, stepVariations].forEach((el) =>
+    el.classList.add("hidden")
+  );
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+// ── HISTORY ───────────────────────────────────────
+async function loadHistory() {
+  try {
+    const res  = await fetch("/api/history");
+    const data = await res.json();
+
+    historyCount.textContent = data.length;
+
+    if (!data.length) {
+      historyList.innerHTML = `<p class="empty-state">No pins saved yet. Create your first one!</p>`;
+      return;
+    }
+
+    historyList.innerHTML = "";
+    // Show newest first
+    [...data].reverse().forEach((pin, idx) => {
+      const item = document.createElement("div");
+      item.className = "history-item";
+      item.innerHTML = `
+        <img
+          class="history-thumb"
+          src="${pin.image || `https://picsum.photos/seed/${idx}/150/200`}"
+          alt="Pin"
+          loading="lazy"
+        />
+        <div class="history-meta">
+          <p class="history-pin-title">${pin.pin_title || "Untitled Pin"}</p>
+          <p class="history-desc">${pin.description || ""}</p>
+          <p class="history-date">${formatDate(pin.created_at)}</p>
+        </div>
+        <div class="history-actions">
+          <button class="btn-icon" title="Preview">👁</button>
+          <button class="btn-icon danger" title="Delete">✕</button>
+        </div>
+      `;
+
+      // Preview
+      item.querySelector(".btn-icon:not(.danger)").addEventListener("click", (e) => {
+        e.stopPropagation();
+        openModal(pin);
+      });
+
+      // Click row → preview
+      item.addEventListener("click", () => openModal(pin));
+
+      // Delete
+      item.querySelector(".btn-icon.danger").addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const realIdx = data.length - 1 - idx; // correct index for reversed display
+        await fetch(`/api/history/${realIdx}`, { method: "DELETE" });
+        item.style.opacity = "0";
+        setTimeout(() => loadHistory(), 300);
+      });
+
+      historyList.appendChild(item);
+    });
+
+  } catch (err) {
+    console.error("History load failed:", err);
+  }
+}
+
+// ── MODAL ─────────────────────────────────────────
+const modal = $("pin-modal");
+
+function openModal(pin) {
+  $("modal-img").src     = pin.image || `https://picsum.photos/seed/42/400/600`;
+  $("modal-title").textContent = pin.pin_title || "Untitled";
+  $("modal-desc").textContent  = pin.description || "";
+  $("modal-tags").textContent  = pin.hashtags || "";
+  $("modal-cta").textContent   = pin.cta || "Shop now";
+  $("modal-tone").textContent  = `${toneEmoji(pin.tone)} ${capitalize(pin.tone || "viral")} tone`;
+  modal.classList.remove("hidden");
+}
+
+$("modal-close").addEventListener("click", () => modal.classList.add("hidden"));
+modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.add("hidden"); });
+
+$("modal-copy-btn").addEventListener("click", () => {
+  const text = [
+    $("modal-title").textContent,
+    "",
+    $("modal-desc").textContent,
+    "",
+    $("modal-tags").textContent,
+  ].join("\n");
+  navigator.clipboard.writeText(text).then(() => {
+    $("modal-copy-btn").textContent = "Copied! ✓";
+    setTimeout(() => ($("modal-copy-btn").textContent = "Copy All"), 2000);
+  });
+});
+
+// ── UTILS ──────────────────────────────────────────
+function reveal(el) {
+  el.classList.remove("hidden");
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  try {
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      month: "short", day: "numeric", year: "numeric",
+      hour: "2-digit", minute: "2-digit",
+    });
+  } catch { return dateStr; }
+}
+
+function flash(el, msg) {
+  el.style.borderColor = "var(--accent)";
+  el.placeholder = msg;
+  setTimeout(() => {
+    el.style.borderColor = "";
+    el.placeholder = "https://www.amazon.com/dp/...";
+  }, 2000);
+}
+
+function showError(msg) {
+  const div = document.createElement("div");
+  div.style.cssText = `
+    position: fixed; bottom: 24px; right: 24px; z-index: 999;
+    background: #3b0a14; border: 1px solid #e63462; border-radius: 10px;
+    color: #f87171; padding: 14px 20px; font-size: 14px; font-weight: 600;
+    animation: slideUp 0.3s ease;
+  `;
+  div.textContent = "⚠ " + msg;
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 4000);
 }

@@ -3,167 +3,182 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PinFlow — Pinterest Automation</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+  <title>PinFlow — AI Pinterest Marketing</title>
   <link rel="stylesheet" href="/static/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- ═══════════════════ NAVBAR ═══════════════════ -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <div class="nav-logo">
-        <span class="logo-pin">📌</span>
-        <span class="logo-text">Pin<span class="logo-accent">Flow</span></span>
+  <!-- ── HEADER ─────────────────────────── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">◆</span>
+        <span>Pin<em>Flow</em></span>
       </div>
-      <div class="nav-tagline">Amazon → Pinterest, automated.</div>
-      <div class="nav-badge">Beta</div>
+      <nav class="nav-tabs">
+        <button class="tab-btn active" data-tab="create">Create</button>
+        <button class="tab-btn" data-tab="history">History</button>
+      </nav>
+      <div class="header-badge">AI-Powered</div>
     </div>
-  </nav>
+  </header>
 
-  <!-- ═══════════════════ HERO ═══════════════════ -->
-  <section class="hero">
-    <p class="hero-eyebrow">✦ AI-Powered Pinterest Tool</p>
-    <h1 class="hero-title">Turn any Amazon product<br>into a viral Pin.</h1>
-    <p class="hero-sub">Paste a link. Pick an image. Get a ready-to-post Pinterest card in seconds.</p>
+  <!-- ── MAIN ───────────────────────────── -->
+  <main class="main">
 
-    <!-- SEARCH BOX -->
-    <div class="search-wrap">
-      <div class="search-box" id="searchBox">
-        <span class="search-icon">🔗</span>
-        <input
-          type="url"
-          id="linkInput"
-          placeholder="Paste your Amazon product URL here..."
-          autocomplete="off"
-          spellcheck="false"
-        />
-        <button class="btn-fetch" id="fetchBtn" onclick="fetchProduct()">
-          <span class="btn-label">Fetch Images</span>
-          <span class="btn-arrow">→</span>
-        </button>
+    <!-- ── TAB: CREATE ───────────────────── -->
+    <section id="tab-create" class="tab-section active">
+
+      <!-- Step 1: URL Input -->
+      <div class="card step-card" id="step-input">
+        <div class="step-label">Step 1</div>
+        <h2 class="step-title">Paste your Amazon link</h2>
+        <div class="input-row">
+          <input
+            id="product-url"
+            type="url"
+            placeholder="https://www.amazon.com/dp/..."
+            class="url-input"
+          />
+          <button id="fetch-btn" class="btn btn-primary">
+            <span class="btn-text">Fetch Product</span>
+            <span class="btn-loader hidden">⟳</span>
+          </button>
+        </div>
+        <p class="hint">Paste any Amazon product URL — we handle the rest.</p>
       </div>
-      <p class="search-hint">Works with any amazon.com product link</p>
-    </div>
-  </section>
 
-  <!-- ═══════════════════ PRODUCT INFO STRIP ═══════════════════ -->
-  <div class="product-strip" id="productStrip" style="display:none;">
-    <div class="strip-inner">
-      <div class="strip-img-wrap" id="stripImgWrap" style="display:none;">
-        <img id="stripImg" src="" alt="Product" />
-      </div>
-      <div class="strip-info">
-        <p class="strip-label">Detected Product</p>
-        <h3 class="strip-title" id="stripTitle">—</h3>
-        <a class="strip-link" id="stripLink" href="#" target="_blank">Open on Amazon ↗</a>
-      </div>
-    </div>
-  </div>
+      <!-- Step 2: Product Preview (hidden until fetched) -->
+      <div class="card step-card hidden" id="step-product">
+        <div class="step-label">Step 2</div>
+        <h2 class="step-title">Product preview</h2>
 
-  <!-- ═══════════════════ LOADER ═══════════════════ -->
-  <div class="loader-wrap" id="loaderWrap" style="display:none;">
-    <div class="loader-card">
-      <div class="loader-pins">
-        <div class="lpin lpin1"></div>
-        <div class="lpin lpin2"></div>
-        <div class="lpin lpin3"></div>
-      </div>
-      <p class="loader-text" id="loaderText">Fetching product data…</p>
-    </div>
-  </div>
+        <div class="product-preview">
+          <div class="product-img-wrap">
+            <img id="product-img" src="" alt="Product" />
+          </div>
+          <div class="product-meta">
+            <p class="product-title" id="product-title-display"></p>
+            <p class="product-price" id="product-price-display"></p>
 
-  <!-- ═══════════════════ IMAGE GRID ═══════════════════ -->
-  <section class="grid-section" id="gridSection" style="display:none;">
-    <div class="section-header">
-      <h2 class="section-title">Choose your Pin image</h2>
-      <p class="section-sub">Click any image to select it, then generate your Pin.</p>
-    </div>
-    <div class="masonry-grid" id="masonryGrid"></div>
+            <!-- Tone selector -->
+            <div class="tone-group">
+              <label class="tone-label">Content tone</label>
+              <div class="tone-pills">
+                <button class="tone-pill active" data-tone="viral">🔥 Viral</button>
+                <button class="tone-pill" data-tone="luxury">💎 Luxury</button>
+                <button class="tone-pill" data-tone="casual">😊 Casual</button>
+                <button class="tone-pill" data-tone="affiliate">💰 Affiliate</button>
+              </div>
+            </div>
 
-    <div class="generate-bar" id="generateBar" style="display:none;">
-      <div class="gen-preview">
-        <img id="genThumb" src="" alt="" />
-        <span id="genLabel">1 image selected</span>
-      </div>
-      <button class="btn-generate" onclick="generatePin()">
-        ✦ Generate Pin Content
-      </button>
-    </div>
-  </section>
-
-  <!-- ═══════════════════ RESULT ═══════════════════ -->
-  <section class="result-section" id="resultSection" style="display:none;">
-    <div class="section-header">
-      <h2 class="section-title">Your Pinterest Card</h2>
-      <p class="section-sub">Ready to copy and post. Everything's editable.</p>
-      <button onclick="loadHistory()">📜 View History</button>
-      <div id="historyBox"></div>
-    </div>
-
-    <div class="result-layout">
-
-      <!-- Pin Preview Card -->
-      <div class="pin-preview">
-        <div class="pin-card">
-          <div class="pin-img-wrap">
-            <img id="pinImage" src="" alt="Pin Image" />
-            <div class="pin-overlay">
-              <span class="pin-save-btn">📌 Save</span>
+            <div class="action-row">
+              <button id="generate-btn" class="btn btn-accent">
+                <span class="btn-text">✦ Generate AI Content</span>
+                <span class="btn-loader hidden">⟳</span>
+              </button>
+              <button id="variations-btn" class="btn btn-ghost">A/B All Tones</button>
             </div>
           </div>
-          <div class="pin-card-body">
-            <p class="pin-card-title" id="pinCardTitle">—</p>
-            <p class="pin-card-tags" id="pinCardTags">—</p>
-          </div>
         </div>
-        <p class="preview-label">Pinterest Preview</p>
       </div>
 
-      <!-- Editable Fields -->
-      <div class="result-fields">
+      <!-- Step 3: Image picker (hidden until fetched) -->
+      <div class="card step-card hidden" id="step-images">
+        <div class="step-label">Step 3</div>
+        <h2 class="step-title">Pick a hero image</h2>
+        <div class="image-grid" id="image-grid"></div>
+      </div>
 
-        <div class="field-group">
-          <div class="field-header">
-            <label>📝 Title</label>
-            <button class="copy-btn" onclick="copyField('titleField', this)">Copy</button>
+      <!-- Step 4: AI Content (hidden until generated) -->
+      <div class="card step-card hidden" id="step-content">
+        <div class="step-label">Step 4</div>
+        <h2 class="step-title">Your Pinterest post</h2>
+
+        <div class="content-editor">
+          <div class="field-group">
+            <label class="field-label">Pin Title</label>
+            <input id="out-title" class="field-input" type="text" />
+            <span class="char-count" id="title-count">0/100</span>
           </div>
-          <textarea id="titleField" class="field-input" rows="2"></textarea>
-        </div>
-
-        <div class="field-group">
-          <div class="field-header">
-            <label>📄 Description</label>
-            <button class="copy-btn" onclick="copyField('descField', this)">Copy</button>
+          <div class="field-group">
+            <label class="field-label">Description</label>
+            <textarea id="out-desc" class="field-textarea" rows="4"></textarea>
+            <span class="char-count" id="desc-count">0/500</span>
           </div>
-          <textarea id="descField" class="field-input" rows="4"></textarea>
-        </div>
-
-        <div class="field-group">
-          <div class="field-header">
-            <label>#️⃣ Hashtags</label>
-            <button class="copy-btn" onclick="copyField('tagsField', this)">Copy</button>
+          <div class="field-group">
+            <label class="field-label">Hashtags</label>
+            <input id="out-tags" class="field-input" type="text" />
           </div>
-          <textarea id="tagsField" class="field-input hashtag-field" rows="3"></textarea>
+          <div class="field-group">
+            <label class="field-label">Call to Action</label>
+            <input id="out-cta" class="field-input" type="text" />
+          </div>
         </div>
 
-        <div class="result-actions">
-          <a id="productLink" href="#" target="_blank" class="btn-open-product">
-            🛒 Open Product on Amazon
-          </a>
-          <button class="btn-reset" onclick="resetAll()">Start Over</button>
+        <div class="action-row">
+          <button id="save-btn" class="btn btn-primary">
+            <span class="btn-text">Save Pin ✓</span>
+            <span class="btn-loader hidden">⟳</span>
+          </button>
+          <button id="copy-btn" class="btn btn-ghost">Copy Content</button>
+          <button id="reset-btn" class="btn btn-ghost">Start Over</button>
         </div>
 
+        <div id="save-success" class="success-banner hidden">
+          ✓ Pin saved to history!
+        </div>
+      </div>
+
+      <!-- A/B Variations panel -->
+      <div class="card step-card hidden" id="step-variations">
+        <div class="step-label">A/B Testing</div>
+        <h2 class="step-title">All tone variations</h2>
+        <div id="variations-grid" class="variations-grid"></div>
+      </div>
+
+    </section>
+
+    <!-- ── TAB: HISTORY ──────────────────── -->
+    <section id="tab-history" class="tab-section hidden">
+      <div class="card">
+        <div class="history-header">
+          <h2 class="step-title">Saved Pins</h2>
+          <span id="history-count" class="badge">0</span>
+        </div>
+        <div id="history-list" class="history-list">
+          <p class="empty-state">No pins saved yet. Create your first one!</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── PIN PREVIEW MODAL ─────────────── -->
+  <div id="pin-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div class="pin-card">
+        <div class="pin-img-wrap">
+          <img id="modal-img" src="" alt="" />
+          <div class="pin-overlay">
+            <span id="modal-cta" class="pin-cta-badge"></span>
+          </div>
+        </div>
+        <div class="pin-body">
+          <p class="pin-tone-tag" id="modal-tone"></p>
+          <h3 class="pin-title" id="modal-title"></h3>
+          <p class="pin-desc" id="modal-desc"></p>
+          <p class="pin-tags" id="modal-tags"></p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="modal-copy-btn">Copy All</button>
       </div>
     </div>
-  </section>
-
-  <!-- ═══════════════════ FOOTER ═══════════════════ -->
-  <footer class="footer">
-    <p>Built with ❤️ · PinFlow Beta · Not affiliated with Pinterest or Amazon</p>
-  </footer>
+  </div>
 
   <script src="/static/script.js"></script>
 </body>
