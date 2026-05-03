@@ -7,7 +7,7 @@ It streamlines affiliate marketing workflows by generating **ready-to-use titles
 🌟 Overview
 
 Creating Pinterest content manually is repetitive and time-consuming .  
-Each post typically requires:
+Each post typically requires :
 
 - Finding relevant images  
 - Writing engaging titles  
