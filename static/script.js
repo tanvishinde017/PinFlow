@@ -269,3 +269,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Enter") fetchProduct();
   });
 });
+
+async function loadHistory() {
+  const res = await fetch("/api/history");
+  const data = await res.json();
+
+  const box = document.getElementById("historyBox");
+  box.innerHTML = "";
+
+  data.reverse().forEach(item => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <img src="${item.image}" width="100"/>
+      <p>${item.title}</p>
+    `;
+    box.appendChild(div);
+  });
+}

@@ -2,182 +2,181 @@ from flask import Flask, render_template, request, jsonify
 import requests
 from bs4 import BeautifulSoup
 import re
-import urllib.parse
+import os
+import json
+from datetime import datetime
+from PIL import Image
+from io import BytesIO
 
 app = Flask(__name__)
 
+# storage
+HISTORY_FILE = "history.json"
+IMAGE_FOLDER = "static/downloads"
+
+os.makedirs(IMAGE_FOLDER, exist_ok=True)
+
 # -----------------------------
-# Extract product data from Amazon
+# UTIL: Save history
+# -----------------------------
+def save_history(data):
+    history = []
+    if os.path.exists(HISTORY_FILE):
+        with open(HISTORY_FILE, "r") as f:
+            history = json.load(f)
+
+    history.append(data)
+
+    with open(HISTORY_FILE, "w") as f:
+        json.dump(history[-20:], f, indent=2)
+
+
+# -----------------------------
+# AMAZON SCRAPER (IMPROVED)
 # -----------------------------
 def get_product_data(link):
     try:
         headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/120.0.0.0 Safari/537.36"
-            ),
+            "User-Agent": "Mozilla/5.0",
             "Accept-Language": "en-US,en;q=0.9",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
         }
 
-        response = requests.get(link, headers=headers, timeout=12)
-        soup = BeautifulSoup(response.content, "html.parser")
+        r = requests.get(link, headers=headers, timeout=10)
+        soup = BeautifulSoup(r.content, "html.parser")
 
-        # Title
-        title_tag = soup.find(id="productTitle")
-        title = title_tag.get_text().strip() if title_tag else "Trending Product"
+        title = soup.find(id="productTitle")
+        price = soup.find("span", {"class": "a-offscreen"})
 
-        # Product image
-        image = None
-        img_tag = soup.find(id="landingImage") or soup.find(id="imgBlkFront")
-        if img_tag:
-            image = img_tag.get("src") or img_tag.get("data-old-hires") or img_tag.get("data-a-dynamic-image")
-            if isinstance(image, str) and image.startswith("{"):
-                # data-a-dynamic-image is a JSON dict of {url: [w,h]}
-                import json
-                try:
-                    img_dict = json.loads(image)
-                    image = max(img_dict, key=lambda u: img_dict[u][0])
-                except Exception:
-                    image = None
+        title = title.get_text(strip=True) if title else "Trending Product"
+        price = price.get_text(strip=True) if price else "N/A"
 
-        return {"title": title, "image": image}
+        img = soup.find(id="landingImage")
+        image = img.get("src") if img else None
 
-    except Exception:
-        return {"title": "Trending Product", "image": None}
+        return {
+            "title": title,
+            "price": price,
+            "image": image
+        }
+
+    except:
+        return {"title": "Trending Product", "price": "N/A", "image": None}
 
 
 # -----------------------------
-# Smart keyword extraction
+# SMART KEYWORDS (UPGRADED)
 # -----------------------------
 def extract_keywords(title):
-    stopwords = {
-        "with", "for", "and", "the", "in", "of", "to", "a", "an",
-        "by", "at", "from", "on", "is", "it", "or", "as", "be",
-        "up", "set", "pack", "piece", "count", "new", "best", "top",
-        "premium", "high", "quality", "ultra", "super", "pro", "plus",
-        "mini", "max", "xl", "large", "small", "black", "white", "red",
-        "blue", "green", "pink", "2", "3", "4", "5", "6", "10", "12",
-        "inch", "inches", "cm", "mm", "ft", "lbs", "oz", "kg", "g"
-    }
-    words = re.findall(r"[A-Za-z]{3,}", title)
-    keywords = [w for w in words if w.lower() not in stopwords]
-    return keywords[:5]
+    words = re.findall(r"[A-Za-z]{4,}", title)
+    return list(dict.fromkeys(words))[:6]
 
 
 # -----------------------------
-# Generate hashtags
-# -----------------------------
-def generate_hashtags(keywords, category_hint=""):
-    base = ["#amazon", "#shopping", "#musthave", "#deals", "#onlineshopping"]
-    kw_tags = [f"#{k.lower()}" for k in keywords[:5]]
-    extra = ["#trending", "#viral", "#lifestyle", "#newarrival", "#sale"]
-    all_tags = list(dict.fromkeys(kw_tags + base + extra))
-    return " ".join(all_tags[:12])
-
-
-# -----------------------------
-# Generate pin content
+# AI CONTENT (BETTER)
 # -----------------------------
 def generate_content(title):
     keywords = extract_keywords(title)
-    keyword_str = " ".join(keywords[:3])
 
-    short_title = title[:80] + ("..." if len(title) > 80 else "")
+    title_out = "🔥 " + " ".join(keywords[:4])
 
     description = (
-        f"✨ Discover the {keywords[0] if keywords else 'amazing'} everyone is talking about! "
-        f"This {keyword_str} is a total game-changer — perfect for gifting, everyday use, or treating yourself. "
-        f"Shop now before it sells out! 🛒💫"
+        f"✨ Upgrade your lifestyle with this {keywords[0]}! "
+        f"Perfect for daily use, trending right now 🚀 "
+        f"Don’t miss out — limited availability!"
     )
 
-    hashtags = generate_hashtags(keywords)
+    hashtags = " ".join([f"#{k.lower()}" for k in keywords])
+    hashtags += " #amazonfinds #trending #viral #musthave"
 
     return {
-        "title": short_title,
+        "title": title_out,
         "description": description,
-        "hashtags": hashtags,
+        "hashtags": hashtags
     }
 
 
 # -----------------------------
-# Fetch images from Unsplash
+# DOWNLOAD IMAGE
 # -----------------------------
-def get_images(title):
-    keywords = extract_keywords(title)
-    query = "+".join(keywords[:3]) if keywords else "product"
+def download_image(url):
+    try:
+        r = requests.get(url)
+        img = Image.open(BytesIO(r.content))
 
-    # Use different seeds/sizes to get varied results
-    sizes = [
-        ("400", "600"),
-        ("400", "500"),
-        ("400", "650"),
-        ("400", "550"),
-        ("400", "700"),
-        ("400", "480"),
-    ]
-    images = []
-    for i, (w, h) in enumerate(sizes):
-        url = f"https://picsum.photos/{w}/{h}?random={i}"
-        images.append(url)
-    return images
+        filename = f"{datetime.now().timestamp()}.jpg"
+        path = os.path.join(IMAGE_FOLDER, filename)
+
+        img.save(path)
+
+        return "/" + path
+    except:
+        return None
 
 
 # -----------------------------
-# Main route (renders page)
+# GENERATE RANDOM IMAGES
+# -----------------------------
+def get_images():
+    return [f"https://picsum.photos/400/600?random={i}" for i in range(6)]
+
+
+# -----------------------------
+# ROUTES
 # -----------------------------
 @app.route("/")
 def index():
     return render_template("index.html")
 
 
-# -----------------------------
-# AJAX: Fetch product data + images
-# -----------------------------
 @app.route("/api/fetch", methods=["POST"])
-def api_fetch():
-    body = request.get_json()
-    link = (body or {}).get("link", "").strip()
-
-    if not link:
-        return jsonify({"error": "No link provided"}), 400
+def fetch():
+    link = request.json.get("link")
 
     product = get_product_data(link)
-    images = get_images(product["title"])
+    images = get_images()
 
     return jsonify({
         "title": product["title"],
+        "price": product["price"],
         "product_image": product["image"],
         "images": images,
-        "link": link,
+        "link": link
     })
 
 
-# -----------------------------
-# AJAX: Generate pin content
-# -----------------------------
 @app.route("/api/generate", methods=["POST"])
-def api_generate():
-    body = request.get_json()
-    title = (body or {}).get("title", "Trending Product")
-    selected_image = (body or {}).get("selected_image", "")
-    link = (body or {}).get("link", "")
+def generate():
+    data = request.json
 
-    content = generate_content(title)
+    content = generate_content(data["title"])
 
-    return jsonify({
+    saved_img = download_image(data["selected_image"])
+
+    result = {
         "title": content["title"],
         "description": content["description"],
         "hashtags": content["hashtags"],
-        "image": selected_image,
-        "link": link,
-    })
+        "image": saved_img or data["selected_image"],
+        "link": data["link"],
+        "created_at": str(datetime.now())
+    }
+
+    save_history(result)
+
+    return jsonify(result)
+
+
+@app.route("/api/history")
+def history():
+    if not os.path.exists(HISTORY_FILE):
+        return jsonify([])
+
+    with open(HISTORY_FILE) as f:
+        return jsonify(json.load(f))
 
 
 # -----------------------------
-# Run
+# RUN
 # -----------------------------
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True)
