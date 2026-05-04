@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Create Account — PinFlow AI{% endblock %}
+
+{% block body %}
+<div class="auth-page">
+  <div class="auth-glow"></div>
+
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo-mark">P</div>
+      <span class="logo-text">PinFlow <span class="accent">AI</span></span>
+    </div>
+
+    <h1 class="auth-title">Create account</h1>
+    <p class="auth-subtitle">Start publishing AI-powered pins</p>
+
+    <div id="auth-error" class="auth-error hidden"></div>
+
+    <form id="signup-form" novalidate>
+      <div class="field-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        />
+      </div>
+
+      <div class="field-group">
+        <label for="password">Password <span class="hint">(min 8 chars)</span></label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="••••••••"
+          autocomplete="new-password"
+          required
+          minlength="8"
+        />
+      </div>
+
+      <button type="submit" class="btn-primary btn-full" id="signup-btn">
+        <span class="btn-text">Create Account</span>
+        <span class="btn-loader hidden"></span>
+      </button>
+    </form>
+
+    <p class="auth-switch">
+      Already have an account?
+      <a href="{{ url_for('auth.login') }}">Sign in →</a>
+    </p>
+  </div>
+</div>
+
+<script>
+document.getElementById("signup-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn     = document.getElementById("signup-btn");
+  const errDiv  = document.getElementById("auth-error");
+  const email   = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  errDiv.classList.add("hidden");
+
+  if (password.length < 8) {
+    errDiv.textContent = "Password must be at least 8 characters.";
+    errDiv.classList.remove("hidden");
+    return;
+  }
+
+  btn.classList.add("loading");
+
+  try {
+    const res = await fetch("{{ url_for('auth.signup') }}", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      window.location.href = data.redirect;
+    } else {
+      errDiv.textContent = data.error;
+      errDiv.classList.remove("hidden");
+      btn.classList.remove("loading");
+    }
+  } catch {
+    errDiv.textContent = "Network error. Please try again.";
+    errDiv.classList.remove("hidden");
+    btn.classList.remove("loading");
+  }
+});
+</script>
+{% endblock %}

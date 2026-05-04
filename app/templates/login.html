@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Sign In — PinFlow AI{% endblock %}
+
+{% block body %}
+<div class="auth-page">
+  <div class="auth-glow"></div>
+
+  <div class="auth-card">
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="logo-mark">P</div>
+      <span class="logo-text">PinFlow <span class="accent">AI</span></span>
+    </div>
+
+    <h1 class="auth-title">Welcome back</h1>
+    <p class="auth-subtitle">Sign in to your workspace</p>
+
+    <!-- Error banner (filled via JS) -->
+    <div id="auth-error" class="auth-error hidden"></div>
+
+    <form id="login-form" novalidate>
+      <div class="field-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        />
+      </div>
+
+      <div class="field-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-primary btn-full" id="login-btn">
+        <span class="btn-text">Sign In</span>
+        <span class="btn-loader hidden"></span>
+      </button>
+    </form>
+
+    <p class="auth-switch">
+      Don't have an account?
+      <a href="{{ url_for('auth.signup') }}">Create one →</a>
+    </p>
+  </div>
+</div>
+
+<script>
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn     = document.getElementById("login-btn");
+  const errDiv  = document.getElementById("auth-error");
+  const email   = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  errDiv.classList.add("hidden");
+  btn.classList.add("loading");
+
+  try {
+    const res = await fetch("{{ url_for('auth.login') }}", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      window.location.href = data.redirect;
+    } else {
+      errDiv.textContent = data.error;
+      errDiv.classList.remove("hidden");
+      btn.classList.remove("loading");
+    }
+  } catch {
+    errDiv.textContent = "Network error. Please try again.";
+    errDiv.classList.remove("hidden");
+    btn.classList.remove("loading");
+  }
+});
+</script>
+{% endblock %}
