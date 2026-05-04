@@ -55,6 +55,8 @@ class Config:
     )
     PINTEREST_SCOPE = "boards:read,pins:write,user_accounts:read"
 
+    PINTEREST_ACCESS_TOKEN = os.environ.get("PINTEREST_ACCESS_TOKEN", "")
+
     # ── Image Storage ─────────────────────────────────────────────────────────
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "app", "static", "downloads")
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
