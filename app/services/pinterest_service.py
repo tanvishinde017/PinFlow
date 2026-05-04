@@ -25,6 +25,9 @@ def get_auth_url(state: str) -> str:
         "response_type": "code",
         "scope":         current_app.config["PINTEREST_SCOPE"],
         "state":         state,
+
+    
+        "prompt": "select_account",
     }
     return f"{_AUTH_URL}?{urlencode(params)}"
 
