@@ -1,7 +1,10 @@
+"""
+PinFlow AI — Configuration
+"""
+
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -9,8 +12,8 @@ load_dotenv()
 class Config:
     # ── Core ──────────────────────────────────────────────────────────────────
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-change-in-production")
-    DEBUG = False
-    TESTING = False
+    DEBUG      = False
+    TESTING    = False
 
     # ── Database ──────────────────────────────────────────────────────────────
     SQLALCHEMY_DATABASE_URI = os.environ.get(
@@ -27,38 +30,47 @@ class Config:
         "pool_pre_ping": True,
     }
 
-    # ── Redis / Celery ────────────────────────────────────────────────────────
-    REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
-    CELERY_BROKER_URL = REDIS_URL
-    CELERY_RESULT_BACKEND = REDIS_URL
-    CELERY_TASK_SERIALIZER = "json"
-    CELERY_RESULT_SERIALIZER = "json"
-    CELERY_ACCEPT_CONTENT = ["json"]
-    CELERY_TIMEZONE = "UTC"
-    CELERY_TASK_TRACK_STARTED = True
-    CELERY_TASK_MAX_RETRIES = 3
-
     # ── Session ───────────────────────────────────────────────────────────────
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
 
+    # FIX: SESSION_COOKIE_SAMESITE must be "Lax" (not "Strict") so the
+    # session cookie is included on the redirect back from Pinterest.
+    # "Strict" would drop the cookie on any cross-site navigation,
+    # which breaks every OAuth callback flow.
+    SESSION_COOKIE_SAMESITE = "Lax"
+
+    # ── Redis / Celery ────────────────────────────────────────────────────────
+    REDIS_URL              = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
+    CELERY_BROKER_URL      = REDIS_URL
+    CELERY_RESULT_BACKEND  = REDIS_URL
+    CELERY_TASK_SERIALIZER = "json"
+    CELERY_RESULT_SERIALIZER = "json"
+    CELERY_ACCEPT_CONTENT  = ["json"]
+    CELERY_TIMEZONE        = "UTC"
+    CELERY_TASK_TRACK_STARTED = True
+    CELERY_TASK_MAX_RETRIES = 3
+
     # ── Rate Limiting ─────────────────────────────────────────────────────────
-    RATELIMIT_DEFAULT = "200 per day;50 per hour"
+    RATELIMIT_DEFAULT     = "200 per day;50 per hour"
     RATELIMIT_STORAGE_URL = REDIS_URL
 
     # ── Third-party APIs ──────────────────────────────────────────────────────
     ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
-    PINTEREST_CLIENT_ID = os.environ.get("PINTEREST_CLIENT_ID", "")
+    PINTEREST_CLIENT_ID     = os.environ.get("PINTEREST_CLIENT_ID", "")
     PINTEREST_CLIENT_SECRET = os.environ.get("PINTEREST_CLIENT_SECRET", "")
-    PINTEREST_REDIRECT_URI = os.environ.get(
+    PINTEREST_REDIRECT_URI  = os.environ.get(
         "PINTEREST_REDIRECT_URI", "http://localhost:5000/pinterest/callback"
     )
-    PINTEREST_SCOPE = "boards:read,pins:write,user_accounts:read"
+
+    # FIX: Added pins:read to scope — required for the history panel to
+    # display previously created pins. Without it the /pins endpoint returns 403.
+    PINTEREST_SCOPE = "boards:read,pins:read,pins:write,user_accounts:read"
 
     PINTEREST_ACCESS_TOKEN = os.environ.get("PINTEREST_ACCESS_TOKEN", "")
 
     # ── Image Storage ─────────────────────────────────────────────────────────
-    UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "app", "static", "downloads")
+    UPLOAD_FOLDER      = os.path.join(os.path.dirname(__file__), "app", "static", "downloads")
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
 
 
@@ -71,21 +83,21 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = False
-    # Force secure session cookie in production
-    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE   = True
     SESSION_COOKIE_HTTPONLY = True
+    # Keep "Lax" — "Strict" breaks OAuth callbacks (see note in Config above)
     SESSION_COOKIE_SAMESITE = "Lax"
 
 
 class TestingConfig(Config):
-    TESTING = True
+    TESTING    = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
-    WTF_CSRF_ENABLED = False
+    WTF_CSRF_ENABLED        = False
 
 
 config = {
     "development": DevelopmentConfig,
-    "production": ProductionConfig,
-    "testing": TestingConfig,
-    "default": DevelopmentConfig,
+    "production":  ProductionConfig,
+    "testing":     TestingConfig,
+    "default":     DevelopmentConfig,
 }
