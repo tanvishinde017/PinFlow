@@ -1,11 +1,11 @@
-# PinFlow AI 📌
+# PinFlow 📌
 
 > AI-powered Pinterest pin creator for Amazon affiliate marketers.
 > Paste a link → pick an image → get 5 AI titles + 5 descriptions → post to Pinterest.
 
 ---
 
-## Tech Stack
+## Tech Stack 
 
 | Layer | Technology |
 |-------|-----------|
@@ -18,7 +18,7 @@
 
 ---
 
-## Project Structure
+## Project Structure 
 
 ```
 pinflow/
@@ -69,7 +69,7 @@ pinflow/
 git clone https://github.com/yourname/pinflow.git
 cd pinflow
 python -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
+source venv/bin/activate          # Windows: venv\Scripts\activate 
 pip install -r requirements.txt
 ```
 
@@ -77,7 +77,7 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
-# Edit .env — fill in your keys (see below)
+# Edit .env — fill in your keys (see below) 
 ```
 
 **Required keys:**
@@ -190,7 +190,7 @@ flask --app run init-db
 - `/api/post-pin` — 10 requests/minute per user
 - Global default — 200/day, 50/hour
 
-Limits are enforced via Flask-Limiter backed by Redis.
+Limits are enforced via Flask-Limiter backed by Redis .
 
 ---
 
