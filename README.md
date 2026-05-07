@@ -154,19 +154,19 @@ Open http://localhost:5000 → sign up → connect Pinterest → start creating 
 4. Start command: `gunicorn -c gunicorn.conf.py "app:create_app('production')"`
 5. Add all environment variables from `.env.example`
 6. Set `FLASK_ENV=production`
-7. Create a second Render service (Background Worker) with start command:
+7. Create a second Render service (Background Worker) with start command :
    ```
    celery -A celery_worker.celery worker --loglevel=info --concurrency=2
    ```
-8. Set `PINTEREST_REDIRECT_URI` to your Render domain:
+8. Set `PINTEREST_REDIRECT_URI` to your Render domain :
    ```
    https://your-app.onrender.com/pinterest/callback
    ```
-9. Update this URL in your Pinterest app settings too.
+9. Update this URL in your Pinterest app settings too .
 
 ### Database migration on deploy
 
-In Render shell or as a one-off job:
+In Render shell or as a one-off job :
 ```bash
 flask --app run init-db
 ```
@@ -190,7 +190,7 @@ flask --app run init-db
 - `/api/post-pin` — 10 requests/minute per user
 - Global default — 200/day, 50/hour
 
-Limits are enforced via Flask-Limiter backed by Redis .
+Limits are enforced via Flask-Limiter backed by Redis.
 
 ---
 
