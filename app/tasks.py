@@ -11,7 +11,7 @@ from app.services import pinterest_service
 @celery.task(
     bind=True,
     max_retries=3,
-    default_retry_delay=30,  # seconds between retries on failure 
+    default_retry_delay=30,  # seconds between retries on failure of this task 
     name="tasks.post_pin_to_pinterest",
 )
 def post_pin_to_pinterest(self, pin_id: int) -> dict:
