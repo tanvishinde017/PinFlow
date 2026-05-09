@@ -18,14 +18,14 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # Pinterest OAuth 
+    # Pinterest OAuth fields
     pinterest_access_token = db.Column(db.Text, nullable=True)
     pinterest_refresh_token = db.Column(db.Text, nullable=True)
     pinterest_token_expires_at = db.Column(db.DateTime, nullable=True)
     pinterest_user_id = db.Column(db.String(128), nullable=True)
     pinterest_username = db.Column(db.String(128), nullable=True)
 
-    # Relationship 
+    # Relationship to Pins and BoardCache
     pins = db.relationship("Pin", backref="owner", lazy="dynamic", cascade="all, delete-orphan")
     board_caches = db.relationship("BoardCache", backref="owner", lazy="dynamic", cascade="all, delete-orphan")
 

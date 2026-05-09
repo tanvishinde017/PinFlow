@@ -11,7 +11,7 @@ from app.services import pinterest_service
 @celery.task(
     bind=True,
     max_retries=3,
-    default_retry_delay=30,  # seconds between retries on failure
+    default_retry_delay=30,  # seconds between retries on failure 
     name="tasks.post_pin_to_pinterest",
 )
 def post_pin_to_pinterest(self, pin_id: int) -> dict:
@@ -34,7 +34,7 @@ def post_pin_to_pinterest(self, pin_id: int) -> dict:
         db.session.commit()
         return {"success": False, "error": "User not found"}
 
-    # Ensure we have a valid (possibly refreshed) access token for the user
+    # Ensure we have a valid (possibly refreshed) access token for the user before posting
     access_token = pinterest_service.ensure_valid_token(user)
     if not access_token:
         pin.status = "failed"
