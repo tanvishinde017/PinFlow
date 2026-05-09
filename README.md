@@ -1,7 +1,7 @@
 # PinFlow📌
 
 > AI-powered Pinterest pin creator for Amazon affiliate marketers.
-> Paste a link → pick an image → get 5 AI titles + 5 descriptions → post to Pinterest .
+> Paste a link → pick an image → get 5 AI titles + 5 descriptions → post to Pinterest.
 
 ---
 
@@ -34,7 +34,7 @@ pinflow/
 │   ├── services/
 │   │   ├── ai_service.py    # Claude API — generates 5 titles + 5 descriptions
 │   │   ├── scraper.py       # Amazon product scraper
-│   │   ├── pinterest_service.py  # Pinterest OAuth + API calls
+│   │   ├── pinterest_service.py  # Pinterest OAuth + API calls 
 │   │   └── image_service.py # Image download + local storage
 │   ├── templates/
 │   │   ├── base.html
@@ -43,7 +43,7 @@ pinflow/
 │   │   └── dashboard.html
 │   └── static/
 │       ├── style.css        # Dark Pinterest UI
-│       └── script.js        # Dashboard interactions
+│       └── script.js        # Dashboard UI interactions 
 ├── config.py                # Dev / Prod / Test config classes
 ├── run.py                   # Dev server entry point
 ├── celery_worker.py         # Celery worker entry point
