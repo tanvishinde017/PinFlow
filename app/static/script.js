@@ -446,7 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// Global loader
+// Global loader (for long operations like auth, which may redirect away and back)
 function showLoader() {
   document.getElementById("global-loader").classList.remove("hidden");
 }
@@ -454,7 +454,7 @@ function hideLoader() {
   document.getElementById("global-loader").classList.add("hidden");
 }
 
-// Button click animation
+// Button click animation for better feedback on slow operations
 document.querySelectorAll("button").forEach(btn => {
   btn.addEventListener("click", () => {
     btn.style.transform = "scale(0.96)";
@@ -462,7 +462,7 @@ document.querySelectorAll("button").forEach(btn => {
   });
 });
 
-// Progress update
+// Progress update (used during multi-step operations)
 function updateProgress(step) {
   const fill = document.getElementById("progress-fill");
   if (!fill) return;

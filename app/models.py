@@ -25,7 +25,7 @@ class User(UserMixin, db.Model):
     pinterest_user_id = db.Column(db.String(128), nullable=True)
     pinterest_username = db.Column(db.String(128), nullable=True)
 
-    # Relationships 
+    # Relationship 
     pins = db.relationship("Pin", backref="owner", lazy="dynamic", cascade="all, delete-orphan")
     board_caches = db.relationship("BoardCache", backref="owner", lazy="dynamic", cascade="all, delete-orphan")
 
