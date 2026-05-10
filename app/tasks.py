@@ -1,6 +1,6 @@
 """
 PinFlow AI — Celery Background Tasks
-Handles async Pinterest posting with automatic retry on failure.
+Handles async Pinterest posting with automatic retry on failure .
 """
 
 from app import celery, db
@@ -11,7 +11,7 @@ from app.services import pinterest_service
 @celery.task(
     bind=True,
     max_retries=3,
-    default_retry_delay=30,  # seconds between retries on failure of this task 
+    default_retry_delay=30,  # seconds between retries on failure of this task
     name="tasks.post_pin_to_pinterest",
 )
 def post_pin_to_pinterest(self, pin_id: int) -> dict:
@@ -60,7 +60,7 @@ def post_pin_to_pinterest(self, pin_id: int) -> dict:
     except Exception as exc:
         print(f"[celery] post_pin_to_pinterest failed for pin {pin_id}: {exc}")
 
-        # Retry on transient errors; mark failed after exhausting retries or on non-retryable errors
+        # Retry on transient errors ; mark failed after exhausting retries or on non-retryable errors
         try:
             raise self.retry(exc=exc)
         except self.MaxRetriesExceededError:
