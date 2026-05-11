@@ -99,7 +99,7 @@ cp .env.example .env
 createdb pinflow_dev
 
 # Then initialise tables:
-python run.py          # tables auto-created on first run on user selection 
+python run.py          # tables auto-created on first run 
 # OR use the CLI command:
 flask --app run init-db
 ```
