@@ -55,7 +55,7 @@ pinflow/
 
 ---
 
-## Local Setup
+## Local Setup in version
 
 ### Prerequisites
 
@@ -73,7 +73,7 @@ source venv/bin/activate          # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Configure environment
+### 2. Configure environment in .env
 
 ```bash
 cp .env.example .env
@@ -190,7 +190,7 @@ flask --app run init-db
 - `/api/post-pin` — 10 requests/minute per user
 - Global default — 200/day, 50/hour
 
-Limits are enforced via Flask-Limiter backed by Redis .
+Limits are enforced via Flask-Limiter backed by Redis on web .
 
 ---
 
