@@ -1,7 +1,7 @@
 # PinFlow📌
 
 > AI-powered Pinterest pin creator for Amazon affiliate marketers.
-> Paste a link → pick an image → get 5 AI titles + 5 descriptions → post to Pinterest.
+> Paste a link → pick an image → get 5 AI titles + 5 descriptions → post to Pinterest .
 
 ---
 
@@ -61,7 +61,7 @@ pinflow/
 
 - Python 3.11+
 - PostgreSQL running locally
-- Redis running locally (`redis-server`)
+- Redis running locally on web (`redis-server`)
 
 ### 1. Clone & install
 
