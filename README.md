@@ -201,7 +201,7 @@ Limits are enforced via Flask-Limiter backed by Redis .
 - **Image selection** from product images + lifestyle grid
 - **Pinterest board selector** with 1-hour caching
 - **Async posting** via Celery with auto-retry (3 attempts)
-- **Pin history** — last 50 pins per user with status badges
+- **Pin history** — last 50 pins per user with status badges for user 
 - **Toast notifications** for all actions
 - **Live pin preview** updates as you edit
 - **Rate limiting** per user via Redis
