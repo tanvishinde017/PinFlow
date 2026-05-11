@@ -92,7 +92,7 @@ cp .env.example .env
 | `PINTEREST_CLIENT_SECRET` | Same Pinterest app |
 | `PINTEREST_REDIRECT_URI` | Set to `http://localhost:5000/pinterest/callback` |
 
-### 3. Create the database
+### 3. Create the db
 
 ```bash
 # Create the DB in psql:
