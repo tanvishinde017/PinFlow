@@ -144,7 +144,7 @@ Open http://localhost:5000 → sign up → connect Pinterest → start creating 
 1. **Web Service** — Python, runs Flask
 2. **Background Worker** — Python, runs Celery
 3. **PostgreSQL** — Render managed DB
-4. **Redis** — Render managed Redis
+4. **Redis** — Render managed Redis 
 
 ### Steps
 
