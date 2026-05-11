@@ -446,7 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// Global loader (for long operations like auth, which may redirect away and back)
+// Global (for long operations like auth, which may redirect away and back)
 function showLoader() {
   document.getElementById("global-loader").classList.remove("hidden");
 }
