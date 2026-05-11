@@ -164,7 +164,7 @@ Open http://localhost:5000 → sign up → connect Pinterest → start creating 
    ```
 9. Update this URL in your Pinterest app settings too .
 
-### Database migration on deploy
+### Database migration on deploy and see usage
 
 In Render shell or as a one-off job :
 ```bash
@@ -173,7 +173,7 @@ flask --app run init-db
 
 ---
 
-## Pinterest App Setup
+## Pinterest App Setup on pinflow with api connection
 
 1. Go to https://developers.pinterest.com/apps/
 2. Create a new app
