@@ -154,7 +154,7 @@ Open http://localhost:5000 → sign up → connect Pinterest → start creating 
 4. Start command: `gunicorn -c gunicorn.conf.py "app:create_app('production')"`
 5. Add all environment variables from `.env.example`
 6. Set `FLASK_ENV=production`
-7. Create a second Render service (Background Worker) with start command :
+7. Create a second Render service (Background Worker) with start command in render:
    ```
    celery -A celery_worker.celery worker --loglevel=info --concurrency=2
    ```
