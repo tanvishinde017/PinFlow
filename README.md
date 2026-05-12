@@ -55,7 +55,7 @@ pinflow/
 
 ---
 
-## Local Setup in version
+## Local Setup 
 
 ### Prerequisites
 
