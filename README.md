@@ -1,7 +1,7 @@
 # PinFlow📌
 
 > AI-powered Pinterest pin creator for Amazon affiliate marketers .
-> Paste a link → pick an image → get 5 AI titles + 5 descriptions → post to Pinterest.
+> Paste a link → pick an image → get 5 AI titles + 5 descriptions generated → post to Pinterest.
 
 ---
 
@@ -162,7 +162,7 @@ Open http://localhost:5000 → sign up → connect Pinterest → start creating 
    ```
    https://your-app.onrender.com/pinterest/callback
    ```
-9. Update this URL in your Pinterest app settings too .
+9. Update this URL in your Pinterest app settings too.
 
 ### Database migration on deploy and see usage
 
