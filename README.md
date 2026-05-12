@@ -190,7 +190,7 @@ flask --app run init-db
 - `/api/post-pin` — 10 requests/minute per user
 - Global default — 200/day, 50/hour
 
-Limits are enforced via Flask-Limiter backed by Redis on web .
+Limits are enforced via Flask-Limiter backed by Redis on web.
 
 ---
 
