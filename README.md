@@ -1,7 +1,7 @@
 # PinFlow📌
 
 > AI-powered Pinterest pin creator for Amazon affiliate marketers .
-> Paste a link → pick an image → get 5 AI titles generated + 5 descriptions generated → post to Pinterest directly.
+> Paste a link → pick an image → get 5 AI titles generated + 5 descriptions→ post to Pinterest directly.
 
 ---
 
