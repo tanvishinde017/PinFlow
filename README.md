@@ -196,7 +196,7 @@ Limits are enforced via Flask-Limiter backed by Redis on web.
 
 ## Features
 
-- **5 AI titles + 5 descriptions** per generation with different marketing angles
+- **5 AI titles + 5 descriptions** per generation with different marketing angles which are trending
 - **4 content tones**: Viral 🔥 / Luxury ✨ / Casual 💬 / Affiliate 💰
 - **Image selection** from product images + lifestyle grid
 - **Pinterest board selector** with 1-hour caching
