@@ -1,6 +1,6 @@
 # PinFlow📌
-> AI-powered Pinterest pin creator for Amazon affiliate marketers in which they can automate there task of findind trendy titles and captions .
-> Paste a link → pick an image → get 5 AI titles generated + 5 descriptions→ post to Pinterest directly .
+> AI-powered Pinterest pin creator for Amazon affiliate marketers in which they can automate there task of findind trendy titles and captions.
+> Paste a link → pick an image → get 5 AI titles generated + 5 descriptions→ post to Pinterest directly.
 
 ---
 
