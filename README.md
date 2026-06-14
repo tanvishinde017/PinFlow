@@ -17,6 +17,7 @@
 
 ---
 
+
 ## Project Structure 
  
 ```
@@ -51,6 +52,9 @@ pinflow/
 ├── requirements.txt
 └── .env.example
 ```
+
+It streamlines affiliate marketing workflows by generating **ready-to-use titles, descriptions, hashtags, and visuals** — all in one place .
+
 
 ---
 
