@@ -9,7 +9,7 @@ Starts the Flask development server on:
 
 CLI Commands:
     flask init-db
-        Creates database tables manually.
+        Creates database tables manually .
 """
 
 import os
