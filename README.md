@@ -157,7 +157,7 @@ Open http://localhost:5000 → sign up → connect Pinterest → start creating 
    ```
    celery -A celery_worker.celery worker --loglevel=info --concurrency=2
    ```
-8. Set `PINTEREST_REDIRECT_URI` to your Render domain :
+8. Set `PINTEREST_REDIRECT_URI` to your Render domain:
    ```
    https://your-app.onrender.com/pinterest/callback
    ```
