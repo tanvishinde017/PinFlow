@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Signup — PinFlow{% endblock %}
+
+{% block body %}
+<div class="auth-page">
+
+  <div class="auth-card">
+    <h1>Create Account</h1>
+
+    <div id="auth-error" class="auth-error hidden"></div>
+
+    <form id="signup-form">
+
+      <div class="field-group">
+        <input type="email" id="email" placeholder="Email" required />
+      </div>
+
+      <div class="field-group">
+        <input type="password" id="password" placeholder="Password" required />
+        <div class="strength-bar">
+          <div id="strength-fill"></div>
+        </div>
+      </div>
+
+      <button class="btn-primary btn-full">Signup</button>
+
+    </form>
+
+  </div>
+</div>
+
+<script>
+const pass = document.getElementById("password");
+const fill = document.getElementById("strength-fill");
+
+pass.addEventListener("input", () => {
+  let s = 0;
+  if (pass.value.length > 6) s++;
+  if (/[A-Z]/.test(pass.value)) s++;
+  if (/[0-9]/.test(pass.value)) s++;
+  if (/[^A-Za-z0-9]/.test(pass.value)) s++;
+
+  fill.style.width = (s * 25) + "%";
+});
+</script>
+
+{% endblock %}
