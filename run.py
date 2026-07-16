@@ -2,21 +2,24 @@
 PinFlow AI — Development Entry Point
 
 Run:
-    python run.py
+python run.py
 
 Starts the Flask development server on:
-    http://localhost:5000
+http://localhost:5000
 
 CLI Commands:
-    flask init-db
-        Creates database tables manually .
+flask init-db
+Creates database tables manually.
 """
 
 import os
+
 from app import create_app, db
+
 
 # Get environment (default = development)
 ENV = os.environ.get("FLASK_ENV", "development")
+
 
 # Create Flask application
 app = create_app(ENV)
@@ -26,9 +29,6 @@ app = create_app(ENV)
 def init_db():
     """
     Create all database tables.
-
-    Usage:
-        flask init-db
     """
     with app.app_context():
         db.create_all()
@@ -46,6 +46,7 @@ def initialize_database():
 
 
 if __name__ == "__main__":
+
     # Auto-create tables only in development
     initialize_database()
 
